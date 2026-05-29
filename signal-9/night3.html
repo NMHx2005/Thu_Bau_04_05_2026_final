@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGNAL LOST. Night 3</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/phone.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <link rel="stylesheet" href="css/night.css" />
+    <link rel="stylesheet" href="css/game-frame.css" />
+    <link rel="stylesheet" href="css/night3.css" />
+  </head>
+  <body class="night-bedroom-page">
+    <div id="phase-night3" class="page-stage">
+    <div class="phone-frame">
+      <div class="phone-screen" id="phoneScreen3">
+        <header class="phone-status">
+          <span class="phone-status__time">2:47 AM</span>
+          <span class="phone-status__battery"><span class="phone-status__battery-level"></span></span>
+        </header>
+        <div class="chat-header">
+          <div class="chat-header__avatar"></div>
+          <div class="chat-header__name" id="contactName">Unknown</div>
+        </div>
+
+        <div class="n3-section" id="secHeartbeat">
+          <div class="hb-wrap">
+            <p style="font-size: 0.75rem; color: #9898b0; margin: 0 0 8px">Heartbeat trace. Hold the line.</p>
+            <div class="signal-canvas-wrap">
+              <canvas id="hbCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="n3-section night-hidden" id="secTimed">
+          <div class="timer-bar">
+            <span>Window</span>
+            <span id="timerVal">20</span>s
+          </div>
+          <div class="chat-log" id="chatLog3"></div>
+          <footer class="chat-choices" id="chatChoices3"></footer>
+        </div>
+
+        <div class="n3-section night-hidden" id="secReveal">
+          <div class="chat-log" id="chatLogReveal"></div>
+          <footer class="chat-choices" id="chatChoicesReveal" aria-hidden="true"></footer>
+        </div>
+
+        <div class="n3-section night-hidden" id="secWords">
+          <p style="padding: 0 14px; font-size: 0.75rem; color: #9898b0">Assemble what you needed to say.</p>
+          <div class="word-built" id="wordBuilt"></div>
+          <div class="word-bank" id="wordBank"></div>
+          <button type="button" class="explore-cta" style="position: static; transform: none; margin: 8px auto 16px" id="btnWordsDone">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div id="finOverlay" class="fin-overlay night-hidden">
+      <p id="finLine" style="max-width: 28rem; line-height: 1.6"></p>
+      <button type="button" class="explore-cta" style="position: static; transform: none; margin-top: 28px" id="btnRouteEnding">
+        Continue
+      </button>
+    </div>
+
+    <script src="js/gameFrame.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/stateNight3Extend.js"></script>
+    <script>
+      (function () {
+        var S = window.SignalLostState;
+        if (!S || !S.canEnterNight3 || !S.canEnterNight3()) {
+          window.location.replace("night2.html");
+        }
+      })();
+    </script>
+    <script src="js/audio.js"></script>
+    <script src="js/audioNight3Extend.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/signalPuzzle.js"></script>
+    <script src="js/night3.js"></script>
+  </body>
+</html>

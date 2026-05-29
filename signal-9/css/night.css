@@ -1,0 +1,841 @@
+/* SIGNAL LOST — night scenes: exploration, dialpad, signal panel */
+
+.night-hidden {
+  display: none !important;
+}
+
+/* Blurred bedroom behind all night pages (match “index + phone” mood) */
+body.night-bedroom-page {
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--bg, #1a1a2e);
+}
+
+body.night-bedroom-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #1a1a2e url("../assets/images/Bedroom.png") center / cover no-repeat;
+  /* Light blur so the room stays readable; phone UI still reads on top */
+  filter: blur(5px) brightness(0.62);
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+body.night-bedroom-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 100% 100% at 50% 42%,
+      rgba(26, 26, 46, 0.12) 0%,
+      rgba(26, 26, 46, 0.5) 62%,
+      rgba(10, 10, 18, 0.72) 100%);
+}
+
+/* Explore phase: sharp room (no blur); hide global blurred layer */
+body.night-bedroom-page:has(#phase-explore:not(.night-hidden))::before {
+  opacity: 0;
+}
+
+body.night-bedroom-page:has(#phase-explore:not(.night-hidden))::after {
+  opacity: 0.35;
+}
+
+body.night-bedroom-page>*:not(#finOverlay):not(#eyeLidTop):not(#eyeLidBottom):not(#transitionText):not(#objLightbox):not(#loreHost) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fullscreen overlays above blurred layer (Night 3 interstitial, etc.) */
+#finOverlay.fin-overlay {
+  z-index: 60;
+}
+
+.night-bedroom-page .page-stage {
+  background: transparent;
+}
+
+.night-bedroom-page .dial-wrap {
+  background: transparent;
+}
+
+.explore-scene {
+  position: relative;
+  min-height: 100vh;
+  background: transparent;
+  overflow: hidden;
+}
+
+.explore-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #1a1a2e url("../assets/images/Bedroom.png") center / cover no-repeat;
+  filter: brightness(0.88);
+  pointer-events: none;
+}
+
+.explore-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 80% at 50% 45%,
+      rgba(10, 10, 18, 0) 0%,
+      rgba(10, 10, 18, 0.45) 100%);
+}
+
+.explore-inner {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.explore-hint {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(232, 232, 240, 0.55);
+  margin-bottom: 12px;
+}
+
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.hotspot--laptop {
+  left: 4%;
+  top: 45%;
+  width: 25%;
+  height: 30%;
+}
+
+.hotspot--window {
+  left: 1%;
+  top: 7%;
+  width: 18%;
+  height: 25%;
+}
+
+.hotspot--note {
+  left: 4%;
+  top: 68%;
+  width: 10%;
+  height: 12%;
+}
+
+.hotspot--photo {
+  left: 72%;
+  top: 5%;
+  width: 17%;
+  height: 20%;
+}
+
+.hotspot--coat {
+  left: 64%;
+  top: 30%;
+  width: 18%;
+  height: 70%;
+}
+
+.lore-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: "Courier New", Courier, monospace;
+  color: #e8e8f0;
+}
+
+.lore-overlay__box {
+  max-width: 28rem;
+  line-height: 1.55;
+  font-size: 0.95rem;
+  border: 1px solid rgba(108, 99, 255, 0.35);
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(26, 26, 46, 0.95);
+}
+
+.explore-cta {
+  position: absolute;
+  bottom: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(108, 99, 255, 0.5);
+  background: rgba(108, 99, 255, 0.2);
+  color: #f0f0ff;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+}
+
+.explore-cta:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.dial-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(ellipse 80% 60% at 50% 20%, #2a2a48 0%, #1a1a2e 55%);
+}
+
+.dial-pad {
+  width: 100%;
+  max-width: 320px;
+  padding: 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(37, 37, 66, 0.95);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.dial-display {
+  min-height: 2.5rem;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e8e8f0;
+  letter-spacing: 0.12em;
+  text-align: right;
+  font-size: 1.1rem;
+}
+
+.dial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.dial-btn {
+  padding: 14px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(108, 99, 255, 0.12);
+  color: #e8e8f0;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.dial-btn:hover {
+  border-color: rgba(108, 99, 255, 0.45);
+}
+
+.dial-row-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.signal-panel {
+  padding: 12px 14px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(26, 26, 46, 0.96);
+}
+
+.signal-panel__label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #9898b0;
+  margin-bottom: 8px;
+}
+
+.signal-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(108, 99, 255, 0.25);
+  margin-bottom: 12px;
+}
+
+.signal-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.signal-slider {
+  width: 100%;
+  accent-color: #6c63ff;
+}
+
+.signal-glitch-title {
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: #e8e8f0;
+  text-shadow:
+    2px 0 rgba(255, 0, 80, 0.35),
+    -2px 0 rgba(0, 200, 255, 0.35);
+  margin-bottom: 4px;
+}
+
+.signal-subtitle {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: #9898b0;
+  line-height: 1.35;
+  padding: 0 8px;
+}
+
+/* ─── Eyelid overlays (shared by Night 1 + Night 2) ─────────────── */
+
+#eyeLidTop,
+#eyeLidBottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #000;
+  pointer-events: none;
+  height: 51vh;
+  /* 1px overlap at centre to avoid hairline gap */
+}
+
+#eyeLidTop {
+  top: 0;
+}
+
+#eyeLidBottom {
+  bottom: 0;
+}
+
+/* ── Night 1: three quick blinks then open (2.8s) ── */
+#eyeLidTop {
+  animation: eyeLidTopBlink 2.8s ease forwards;
+}
+
+#eyeLidBottom {
+  animation: eyeLidBottomBlink 2.8s ease forwards;
+}
+
+@keyframes eyeLidTopBlink {
+  0% {
+    transform: translateY(0);
+  }
+
+  10% {
+    transform: translateY(-65%);
+  }
+
+  14% {
+    transform: translateY(0);
+  }
+
+  28% {
+    transform: translateY(0);
+  }
+
+  32% {
+    transform: translateY(-52%);
+  }
+
+  40% {
+    transform: translateY(0);
+  }
+
+  54% {
+    transform: translateY(0);
+  }
+
+  72% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes eyeLidBottomBlink {
+  0% {
+    transform: translateY(0);
+  }
+
+  10% {
+    transform: translateY(65%);
+  }
+
+  14% {
+    transform: translateY(0);
+  }
+
+  28% {
+    transform: translateY(0);
+  }
+
+  32% {
+    transform: translateY(52%);
+  }
+
+  40% {
+    transform: translateY(0);
+  }
+
+  54% {
+    transform: translateY(0);
+  }
+
+  72% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* ── Night 2: single slow open (2.2s) ── */
+#eyeLidTop.eye-open {
+  animation: eyeLidTopOpen 2.2s ease-out forwards;
+}
+
+#eyeLidBottom.eye-open {
+  animation: eyeLidBottomOpen 2.2s ease-out forwards;
+}
+
+@keyframes eyeLidTopOpen {
+  0% {
+    transform: translateY(0);
+  }
+
+  18% {
+    transform: translateY(-5%);
+  }
+
+  48% {
+    transform: translateY(-46%);
+  }
+
+  74% {
+    transform: translateY(-90%);
+  }
+
+  88% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes eyeLidBottomOpen {
+  0% {
+    transform: translateY(0);
+  }
+
+  18% {
+    transform: translateY(5%);
+  }
+
+  48% {
+    transform: translateY(46%);
+  }
+
+  74% {
+    transform: translateY(90%);
+  }
+
+  88% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* ─── Night transition text (eyes-closed interstitial) ─────────────── */
+
+#transitionText {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: transparent;
+  pointer-events: none;
+}
+
+#transitionText p {
+  margin: 0;
+  opacity: 0;
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: 0.2em;
+  text-align: center;
+  animation: fadeInText 0.5s ease forwards;
+}
+
+#transitionText p:first-child {
+  font-size: 0.9rem;
+  color: #e8e8f0;
+}
+
+#transitionText p:last-child {
+  font-size: 0.72rem;
+  color: #9898b0;
+  letter-spacing: 0.14em;
+  animation-delay: 0.25s;
+}
+
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Hotspot markers (violet ring; object art in lightbox only) ─────── */
+
+.hotspot-dot {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(130, 122, 255, 0.85);
+  background: radial-gradient(circle at 50% 50%,
+      rgba(108, 99, 255, 0.5) 0%,
+      rgba(108, 99, 255, 0.12) 45%,
+      transparent 68%);
+  box-shadow: 0 0 10px rgba(108, 99, 255, 0.4);
+  opacity: 0;
+  transform: scale(0.5);
+  flex-shrink: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.hotspot-dot::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(108, 99, 255, 0.5);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hotspot-dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5.5px;
+  height: 5.5px;
+  border-radius: 50%;
+  background: rgba(232, 232, 255, 0.95);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 6px rgba(140, 132, 255, 0.9);
+  pointer-events: none;
+}
+
+.hotspot-dot.visible {
+  opacity: 1;
+  transform: scale(1);
+  animation: hotspotDotBreathe 2.6s ease-in-out infinite;
+}
+
+.hotspot-dot.visible::before {
+  animation: hotspotRipple 2.8s ease-out infinite;
+}
+
+.hotspot:hover .hotspot-dot,
+.hotspot:focus-visible .hotspot-dot {
+  transform: scale(1.18);
+  border-color: rgba(200, 196, 255, 1);
+  box-shadow:
+    0 0 14px rgba(108, 99, 255, 0.65),
+    0 0 28px rgba(108, 99, 255, 0.25);
+  animation: hotspotDotBreathe 1.4s ease-in-out infinite;
+}
+
+.hotspot.is-visited .hotspot-dot {
+  opacity: 0.42;
+  transform: scale(0.92);
+  border-color: rgba(108, 99, 255, 0.35);
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.2);
+  animation: none;
+}
+
+.hotspot.is-visited .hotspot-dot::before {
+  animation: none;
+  opacity: 0;
+}
+
+.hotspot.is-visited .hotspot-dot::after {
+  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(0.85);
+}
+
+@keyframes hotspotDotBreathe {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(108, 99, 255, 0.35);
+    border-color: rgba(120, 112, 255, 0.8);
+  }
+
+  50% {
+    box-shadow:
+      0 0 18px rgba(108, 99, 255, 0.55),
+      0 0 32px rgba(108, 99, 255, 0.2);
+    border-color: rgba(175, 168, 255, 1);
+  }
+}
+
+@keyframes hotspotRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+
+  55% {
+    opacity: 0.22;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(4.5);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hotspot-dot,
+  .hotspot-dot.visible,
+  .hotspot-dot.visible::before {
+    animation: none !important;
+    transition: opacity 0.2s ease;
+  }
+
+  .hotspot-dot.visible {
+    transform: scale(1);
+  }
+
+  #eyeLidTop,
+  #eyeLidBottom {
+    animation: none !important;
+    transition: transform 0.3s ease;
+  }
+
+  #eyeLidTop {
+    transform: translateY(-100%);
+  }
+
+  #eyeLidBottom {
+    transform: translateY(100%);
+  }
+}
+
+@media (max-width: 480px) {
+  .hotspot {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .hotspot-dot {
+    width: 28px;
+    height: 28px;
+  }
+
+  .explore-cta,
+  .dial-btn {
+    min-height: 44px;
+  }
+}
+
+/* ─── Object lightbox (zoom from hotspot) ───────────────────────────── */
+
+#objLightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.35s ease;
+  cursor: pointer;
+}
+
+#objLightbox.lb-open {
+  background: rgba(0, 0, 0, 0.82);
+}
+
+#objLightbox__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: min(88vw, 440px);
+  cursor: default;
+  /* transform and opacity are controlled entirely by JS inline styles */
+}
+
+#objLightbox__img {
+  width: 100%;
+  max-height: 55vh;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.65);
+  display: block;
+}
+
+/* Coat asset is tall; contain and cap size so the modal stays balanced */
+#objLightbox__img[data-object="coat"] {
+  width: auto;
+  max-width: min(72vw, 260px);
+  max-height: min(38vh, 42cqh);
+  object-fit: contain;
+}
+
+#objLightbox__title {
+  margin-top: 18px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: #e8e8f0;
+  text-align: center;
+}
+
+#objLightbox__text {
+  margin-top: 10px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  color: #9898b0;
+  text-align: center;
+  line-height: 1.6;
+  max-width: 34ch;
+}
+
+#objLightbox__close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(26, 26, 46, 0.92);
+  color: #9898b0;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#objLightbox__close:hover {
+  color: #e8e8f0;
+  border-color: rgba(108, 99, 255, 0.5);
+}
+
+/* ─── Night 2 — memory cards: Card 1.png … Card 4.png + frame for slot 5 ─── */
+.memory-card {
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(26, 26, 46, 0.92);
+}
+
+.memory-card__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.memory-card__img {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+}
+
+.memory-card__meta {
+  flex: 1;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #e8e8f0;
+}
+
+.memory-card__meta strong {
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+
+.memory-slot--framed {
+  position: relative;
+  min-height: 104px;
+  padding: 22px 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-style: solid !important;
+  background-color: rgba(26, 26, 46, 0.45);
+  background-image: url("../assets/images/frame.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}

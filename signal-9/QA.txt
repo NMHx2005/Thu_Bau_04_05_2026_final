@@ -1,0 +1,78 @@
+SIGNAL LOST — manual QA matrix (trust T, clues C)
+
+Reset: open index.html (prologue calls resetGame — clears trust, clues, flags, phrases, finalWords, notYetRound, dial decoy session).
+
+Reset verification:
+- After prologue, localStorage must not contain signalLost_finalWords or signalLost_notYetRound.
+- sessionStorage signalLost_dialDecoyPassed cleared on new prologue.
+
+Prologue:
+- Tap "Tap to start" enables audio (mobile gesture).
+- Hint "click anywhere" hidden until audio unlocked.
+- Slides advance only after unlock.
+
+Night order guards (no skip):
+- night2.html: requires doneSignal1 (Night 1 signal puzzle completed). Else → night1.html.
+- night3.html: requires foundHiddenThread (archived thread opened in Notes or Browser in Night 2). Else → night2.html.
+
+Night 1 — exploration beats:
+- Visit note before dial → extra Unknown line in chat.
+- Visit window / laptop / photo / coat → each adds one conditional line (see night1Data.js).
+
+Night 1 — dial / lightbox:
+- dialBuf caps at 10 digits.
+- ESC closes object lightbox; close button receives focus when opened.
+- Correct digits only: 0427318247 (spaces ignored).
+- Decoy first hint wrong digit; shake; then correct hint.
+
+Night 1 — rain / decode:
+- Rain fades when leaving for Night 2 (Continue after signal decode).
+- Decode uses assets/images/LastLocation.png; falls back to Bedroom.png if missing.
+
+Night 2 — hidden thread in-app:
+- After free-text + UNKNOWN follow-up, phase returns to Apps with banner; "Continue to Night 3" when hidden found.
+- Open Notes OR Browser → expand Drafts / Draft sync.
+- First open awards hidden clue (tryAwardClue idempotent).
+- Replay: opening thread again must not add a second hidden clue.
+
+Voicemail:
+- trust < 5 → locked copy.
+- trust >= 5 → "Play message" plays assets/audio/voicemail.mp3 (or tone fallback).
+
+Routing (Night 3 after word puzzle Continue):
+- T>=7 and C>=3 → ending-shell.html?outcome=found
+- T>=4 or C>=2 → ending-shell.html?outcome=static
+- else → ending-shell.html?outcome=notyet
+
+Boundary spot checks:
+1) T=3, C=3 → static (C>=2)
+2) T=7, C=2 → static (T>=4)
+3) T=7, C=3 → found
+4) T=3, C=1 → notyet
+
+Clue idempotency:
+- Replay Night 1 signal puzzle: clueCount must not increase twice (doneSignal1 flag).
+- Hidden thread: only one clue (foundHiddenThread flag).
+
+NOT YET (two-step):
+- First screen: "Stay here (round 2)" sets notYetRound=1.
+- "Enough (→ STATIC now)" → ending-shell.html?outcome=static.
+- If notYetRound>=1 on load: single button to STATIC.
+
+Audio:
+- Pixabay MP3: rain, notification, typing, heartbeat, voicemail.
+- Heartbeat puzzle uses heartbeat.mp3 (not only sine beep).
+- Web Audio resume after prologue tap.
+
+Accessibility:
+- prefers-reduced-motion: skip eyelid blink; no dial shake; instant hotspot dots.
+
+Mobile:
+- Game frame fits viewport; dial/chat buttons min 44px touch target.
+- No horizontal overflow on 375px width.
+
+jQuery UI (Night 2):
+- css/jquery-overrides.css loads after jquery-ui.css; sortable placeholder matches palette.
+
+Reference:
+- reference.html and ATTRIBUTION.txt list all third-party assets.

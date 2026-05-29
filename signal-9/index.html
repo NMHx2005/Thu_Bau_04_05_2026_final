@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SIGNAL LOST. Prologue</title>
+    <link rel="stylesheet" href="css/prologue.css" />
+    <link rel="stylesheet" href="css/game-frame.css" />
+  </head>
+  <body class="prologue-root" id="prologueRoot">
+    <div id="audioUnlock" class="audio-unlock" role="dialog" aria-label="Enable sound">
+      <p class="audio-unlock__title">SIGNAL LOST</p>
+      <p class="audio-unlock__text">Tap to enable sound and begin.</p>
+      <button type="button" class="audio-unlock__btn" id="btnAudioUnlock">Tap to start</button>
+    </div>
+
+    <section class="prologue-slide is-active" data-slide="0" aria-label="Slide 1">
+      <p class="prologue-text prologue-text--fade"></p>
+    </section>
+    <section class="prologue-slide" data-slide="1" aria-label="Slide 2">
+      <p class="prologue-text"></p>
+    </section>
+    <section class="prologue-slide" data-slide="2" aria-label="Slide 3">
+      <p class="prologue-text"></p>
+    </section>
+    <section class="prologue-slide" data-slide="3" aria-label="Slide 4">
+      <p class="prologue-text"></p>
+    </section>
+    <p class="prologue-hint prologue-hint--hidden" id="prologueHint">click anywhere to continue</p>
+
+    <script src="js/gameFrame.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/stateNight3Extend.js"></script>
+    <script src="js/audio.js"></script>
+    <script>
+      (function () {
+        var slides = [
+          "Dark. Then: a rectangle of light.",
+          "Something familiar wakes before you do. A rectangle of light in a room you cannot name.",
+          "The rain is wrong, too steady, too close. The phone does not care. It only waits.",
+          "SIGNAL LOST",
+        ];
+        var root = document.getElementById("prologueRoot");
+        var sections = [].slice.call(document.querySelectorAll(".prologue-slide"));
+        var idx = 0;
+        var audioReady = false;
+        var unlockEl = document.getElementById("audioUnlock");
+        var hintEl = document.getElementById("prologueHint");
+
+        if (window.SignalLostState) {
+          window.SignalLostState.resetGame();
+        }
+
+        function render() {
+          sections.forEach(function (sec, i) {
+            sec.classList.toggle("is-active", i === idx);
+            var p = sec.querySelector(".prologue-text");
+            p.textContent = slides[i];
+            if (i === idx && i > 0) {
+              p.classList.remove("prologue-text--fade");
+              void p.offsetWidth;
+              p.classList.add("prologue-text--fade");
+            }
+          });
+        }
+
+        function advance() {
+          if (!audioReady) return;
+          if (idx >= sections.length - 1) {
+            window.location.href = "night1.html";
+            return;
+          }
+          idx++;
+          render();
+        }
+
+        function enableAudio() {
+          if (audioReady) return;
+          audioReady = true;
+          if (window.SignalLostAudio) {
+            window.SignalLostAudio.resume();
+          }
+          if (unlockEl) unlockEl.classList.add("audio-unlock--done");
+          if (hintEl) hintEl.classList.remove("prologue-hint--hidden");
+          render();
+        }
+
+        document.getElementById("btnAudioUnlock").addEventListener("click", function (e) {
+          e.stopPropagation();
+          enableAudio();
+        });
+
+        unlockEl.addEventListener("click", function (e) {
+          if (e.target === unlockEl || e.target.classList.contains("audio-unlock__text")) {
+            enableAudio();
+          }
+        });
+
+        root.addEventListener("click", function () {
+          if (!audioReady) {
+            enableAudio();
+            return;
+          }
+          advance();
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

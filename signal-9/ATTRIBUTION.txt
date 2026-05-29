@@ -1,0 +1,64 @@
+SIGNAL LOST — Credits & asset attribution
+Last updated: May 2026
+
+================================================================================
+AUDIO (assets/audio/)
+================================================================================
+
+rain.mp3
+  Source: Pixabay — "Rain and Thunder" (rain-and-thunder-16728)
+  Licence: Pixabay Content License (free for commercial use, no attribution required)
+  URL: https://pixabay.com/sound-effects/rain-and-thunder-16728/
+
+notification.mp3
+  Source: Pixabay — "Notification Sound" (notification-sound-7062)
+  Licence: Pixabay Content License
+  URL: https://pixabay.com/sound-effects/notification-sound-7062/
+
+typing.mp3
+  Source: Pixabay — "Keyboard Typing One Short" (keyboard-typing-one-short-292781)
+  Licence: Pixabay Content License
+  URL: https://pixabay.com/sound-effects/keyboard-typing-one-short-292781/
+
+heartbeat.mp3
+  Source: Pixabay — "Heartbeat Sound" (heartbeat-sound-7065)
+  Licence: Pixabay Content License
+  URL: https://pixabay.com/sound-effects/heartbeat-sound-7065/
+
+voicemail.mp3
+  Source: Pixabay — "Phone Vibration" (phone-vibration-16770)
+  Licence: Pixabay Content License
+  URL: https://pixabay.com/sound-effects/phone-vibration-16770/
+
+Web Audio fallback tones (sine oscillators) remain in js/audio.js when file playback fails.
+
+================================================================================
+IMAGES
+================================================================================
+
+LastLocation.png
+  Source: Pexels — night city / lights scene (photo ID 1887239)
+  Photographer: (see Pexels page)
+  Licence: Pexels License (free use)
+  URL: https://www.pexels.com/photo/1887239/
+
+Bedroom.png, Bedroom blur.png, Card 1–5.png, App_*.png, frame*.png,
+night1/obj_*.png — project bundled art (original or coursework assets).
+Document external source here if any image was imported from a third party.
+
+================================================================================
+CODE & LIBRARIES
+================================================================================
+
+jQuery 3.7.1 — MIT — https://jquery.com/
+jQuery UI 1.13.2 (sortable) — MIT — https://jqueryui.com/
+
+Game code: vanilla HTML, CSS, JavaScript (signal-9/).
+
+================================================================================
+AI / GENERATIVE TOOLS
+================================================================================
+
+If generative AI was used for copy, art, or code in this submission, list the tool,
+version, and which files were assisted. Default: narrative copy and structure are
+author-written; assets above are from licensed stock sources unless noted otherwise.
