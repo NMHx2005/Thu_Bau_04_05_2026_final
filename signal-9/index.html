@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>SIGNAL LOST. Prologue</title>
     <link rel="stylesheet" href="css/prologue.css" />
-    <link rel="stylesheet" href="css/game-frame.css" />
   </head>
   <body class="prologue-root" id="prologueRoot">
     <div id="audioUnlock" class="audio-unlock" role="dialog" aria-label="Enable sound">
@@ -15,7 +14,7 @@
     </div>
 
     <section class="prologue-slide is-active" data-slide="0" aria-label="Slide 1">
-      <p class="prologue-text prologue-text--fade"></p>
+      <p class="prologue-text prologue-text--instant"></p>
     </section>
     <section class="prologue-slide" data-slide="1" aria-label="Slide 2">
       <p class="prologue-text"></p>
@@ -28,7 +27,6 @@
     </section>
     <p class="prologue-hint prologue-hint--hidden" id="prologueHint">click anywhere to continue</p>
 
-    <script src="js/gameFrame.js"></script>
     <script src="js/state.js"></script>
     <script src="js/stateNight3Extend.js"></script>
     <script src="js/audio.js"></script>
@@ -56,8 +54,10 @@
             sec.classList.toggle("is-active", i === idx);
             var p = sec.querySelector(".prologue-text");
             p.textContent = slides[i];
-            if (i === idx && i > 0) {
-              p.classList.remove("prologue-text--fade");
+            p.classList.remove("prologue-text--fade", "prologue-text--instant");
+            if (i === idx && i === 0) {
+              p.classList.add("prologue-text--instant");
+            } else if (i === idx && i > 0) {
               void p.offsetWidth;
               p.classList.add("prologue-text--fade");
             }
@@ -77,8 +77,16 @@
         function enableAudio() {
           if (audioReady) return;
           audioReady = true;
+          try {
+            if (window.SignalLostAudio.markAudioUnlocked) {
+              window.SignalLostAudio.markAudioUnlocked();
+            } else {
+              sessionStorage.setItem("signalLost_audioUnlocked", "1");
+            }
+          } catch (e) {}
           if (window.SignalLostAudio) {
             window.SignalLostAudio.resume();
+            window.SignalLostAudio.startRainLoop();
           }
           if (unlockEl) unlockEl.classList.add("audio-unlock--done");
           if (hintEl) hintEl.classList.remove("prologue-hint--hidden");

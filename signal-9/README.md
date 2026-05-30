@@ -9,7 +9,7 @@ https://nmhx2005.github.io/Thu_Bau_04_05_2026/signal-9/
 
 ## Concept
 
-You wake without a name. **Unknown** calls. The story is about identity, memory, and words you never finished saying. There is no traditional HUD: only hotspots, apps, puzzles, and chat that carry state across nights.
+You wake without a name. **Unknown** calls. The story is about identity, memory, and words you never finished saying. A **signal meter** on the phone status bar shows your connection (trust) and recovered fragments (clues) — chat and puzzles move both, and together they choose one of three endings.
 
 ---
 
@@ -29,6 +29,7 @@ Full design doc: [MAJOR_PROJECT_PROGRESS_VI.md](MAJOR_PROJECT_PROGRESS_VI.md)
 
 | Mechanic | Effect |
 |---|---|
+| **Status bar meter** | 5 bars = trust (0–10); 4 dots = clues (0–4) |
 | Chat choices | Add or subtract **trust** (0–10) |
 | Puzzles / hidden thread | Award **clues** (0–4), once each |
 | Night 1 exploration | Extra Unknown lines if you visited objects first |

@@ -18,7 +18,7 @@ Use with live demo: https://nmhx2005.github.io/Thu_Bau_04_05_2026/signal-9/
 
 ## 3. Agency (40 seconds)
 
-"Choices are real. Chat options call `addTrust` — positive and negative answers stack across three nights. Puzzles award clues once each, idempotently. At the end, trust and clue count route to SIGNAL FOUND, STATIC, or NOT YET. Perfect play needs trust seven and at least three clues. The player's final sentence from the word bank appears on the FOUND screen — it's their words, not ours."
+"Choices are real. Chat options call `addTrust` — positive and negative answers stack across three nights. Puzzles award clues once each, idempotently. The **status bar meter** shows connection (five bars) and fragments (four dots) so players see agency without a score popup. At the end, trust and clue count route to SIGNAL FOUND, STATIC, or NOT YET. Perfect play needs trust seven and at least three clues. The player's final sentence from the word bank appears on the FOUND screen — it's their words, not ours."
 
 ---
 
@@ -43,7 +43,9 @@ Show in order if time allows:
 
 | Test | Expected |
 |---|---|
-| Prologue reset | trust=0, clues=0, no finalWords |
+| Prologue reset | trust=0, clues=0, meter empty |
+| Chat + trust | status bars rise/fall |
+| Puzzle clue | next fragment dot fills |
 | T=7, C=3 | ending FOUND |
 | T=7, C=2 | STATIC |
 | T=3, C=3 | STATIC |

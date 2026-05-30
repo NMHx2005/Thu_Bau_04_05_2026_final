@@ -5,12 +5,16 @@
 (function () {
   "use strict";
 
+  var STORAGE_AUDIO_UNLOCK = "signalLost_audioUnlocked";
+  var RAIN_VOLUME = 0.12;
+
   var ctx = null;
   var masterGain = null;
   var sfxGain = null;
   var buffers = {};
   var htmlAudios = {};
   var rainPlaying = false;
+  var rainCtl = null;
 
   function getCtx() {
     if (ctx) return ctx;
@@ -28,6 +32,20 @@
       ctx = null;
     }
     return ctx;
+  }
+
+  function isAudioUnlocked() {
+    try {
+      return sessionStorage.getItem(STORAGE_AUDIO_UNLOCK) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markAudioUnlocked() {
+    try {
+      sessionStorage.setItem(STORAGE_AUDIO_UNLOCK, "1");
+    } catch (e) {}
   }
 
   function resume() {
@@ -118,12 +136,26 @@
   function startRainLoop() {
     resume();
     var a = htmlAudios.rain;
-    if (!a || !a.src) return { stop: function () {}, fadeOut: function () {} };
+    if (!a || !a.src) {
+      return { stop: function () {}, fadeOut: function () {}, playing: false };
+    }
+    if (rainPlaying && !a.paused) {
+      return rainCtl || { stop: function () {}, fadeOut: fadeRainOut, playing: true };
+    }
     a.loop = true;
-    a.volume = 0.08;
+    a.volume = RAIN_VOLUME;
     rainPlaying = true;
-    a.play().catch(function () {});
-    return {
+    var playPromise = a.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(function (err) {
+        rainPlaying = false;
+        if (isAudioUnlocked()) {
+          console.warn("SIGNAL LOST: rain playback blocked.", err);
+        }
+      });
+    }
+    rainCtl = {
+      playing: true,
       stop: function () {
         rainPlaying = false;
         try {
@@ -135,6 +167,7 @@
         fadeRainOut(ms || 1200);
       },
     };
+    return rainCtl;
   }
 
   function fadeRainOut(ms) {
@@ -143,7 +176,7 @@
     if (!rainPlaying && a.paused) return;
     var steps = 24;
     var step = 0;
-    var start = a.volume || 0.08;
+    var start = a.volume || RAIN_VOLUME;
     var id = setInterval(function () {
       step++;
       var k = 1 - step / steps;
@@ -158,12 +191,18 @@
     }, Math.max(80, ms) / steps);
   }
 
-  // Week 9 snapshot keeps this API surface used by Night 1 scripts.
+  function isRainPlaying() {
+    var a = htmlAudios.rain;
+    return !!(rainPlaying && a && !a.paused);
+  }
+
   preloadOptionalFiles();
 
   window.SignalLostAudio = {
     resume: resume,
-    // kept for compatibility; Week 9 doesn’t vary mix per-night
+    isAudioUnlocked: isAudioUnlocked,
+    markAudioUnlocked: markAudioUnlocked,
+    isRainPlaying: isRainPlaying,
     setNight: function () {},
     playNotification: playNotification,
     playTypingTick: playTypingTick,

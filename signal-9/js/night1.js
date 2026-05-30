@@ -420,6 +420,21 @@
     });
   }
 
+  function showRainTapBannerIfNeeded() {
+    var banner = $("rainTapBanner");
+    if (!banner) return;
+    banner.classList.remove("night-hidden");
+    banner.addEventListener("click", function onRainTap() {
+      if (window.SignalLostAudio) {
+        window.SignalLostAudio.markAudioUnlocked();
+        window.SignalLostAudio.resume();
+        rainCtl = window.SignalLostAudio.startRainLoop();
+      }
+      banner.classList.add("night-hidden");
+      banner.removeEventListener("click", onRainTap);
+    });
+  }
+
   function boot() {
     if (!data) {
       showBootError("Night 1 data failed to load. Refresh the page.");
@@ -427,7 +442,14 @@
     }
     if (window.SignalLostAudio) {
       window.SignalLostAudio.setNight(1);
-      rainCtl = window.SignalLostAudio.startRainLoop();
+      if (window.SignalLostAudio.isAudioUnlocked && window.SignalLostAudio.isAudioUnlocked()) {
+        rainCtl = window.SignalLostAudio.startRainLoop();
+      }
+      setTimeout(function () {
+        if (window.SignalLostAudio.isRainPlaying && !window.SignalLostAudio.isRainPlaying()) {
+          showRainTapBannerIfNeeded();
+        }
+      }, 500);
     }
     var digits = window.SignalLostState ? window.SignalLostState.NOTE_PHONE_DIGITS : "0427318247";
     decoyDigits = buildDecoyDigits(digits);

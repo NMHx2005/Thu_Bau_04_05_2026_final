@@ -51,11 +51,26 @@
     return readInt(STORAGE_TRUST, TRUST_MIN, TRUST_MIN, TRUST_MAX);
   }
 
+  function notifyStateChange(detail) {
+    try {
+      if (typeof window.dispatchEvent === "function") {
+        window.dispatchEvent(
+          new CustomEvent("signallost:statechange", { detail: detail || {} })
+        );
+      }
+    } catch (e) {}
+    if (window.SignalLostSignalMeter && window.SignalLostSignalMeter.refresh) {
+      window.SignalLostSignalMeter.refresh(detail || {});
+    }
+  }
+
   function setTrust(value) {
+    var prev = getTrust();
     var n = typeof value === "number" ? value : parseInt(value, 10);
     if (isNaN(n)) n = TRUST_MIN;
     n = clamp(n, TRUST_MIN, TRUST_MAX);
     localStorage.setItem(STORAGE_TRUST, String(n));
+    if (n !== prev) notifyStateChange({ trust: n, prevTrust: prev, clues: getClues() });
     return n;
   }
 
@@ -70,8 +85,10 @@
   }
 
   function addClue() {
-    var next = clamp(getClues() + 1, CLUES_MIN, CLUES_MAX);
+    var prev = getClues();
+    var next = clamp(prev + 1, CLUES_MIN, CLUES_MAX);
     localStorage.setItem(STORAGE_CLUES, String(next));
+    if (next !== prev) notifyStateChange({ clues: next, prevClues: prev, trust: getTrust() });
     return next;
   }
 
@@ -194,6 +211,7 @@
     localStorage.removeItem(STORAGE_DONE_HIDDEN);
     localStorage.removeItem(STORAGE_DONE_SIGNAL3);
     localStorage.removeItem(STORAGE_PHRASES);
+    notifyStateChange({ trust: TRUST_MIN, prevTrust: null, clues: CLUES_MIN, prevClues: null, reset: true });
   }
 
   window.SignalLostState = {

@@ -104,28 +104,116 @@
   color: var(--text);
 }
 
-.phone-status__signal {
+.phone-status__meter {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 6px;
 }
 
-.phone-status__dot {
+.phone-status__meter-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.phone-status__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.phone-status__bar {
+  display: block;
+  width: 4px;
+  height: 12px;
+  border-radius: 1px;
+  background: rgba(108, 99, 255, 0.18);
+  overflow: hidden;
+}
+
+.phone-status__bar-fill {
+  display: block;
+  width: 100%;
+  height: 0%;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #8b84ff 0%, var(--accent) 100%);
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.phone-status__clues {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.phone-status__clue {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--accent);
-  opacity: 0.35;
+  border: 1px solid rgba(108, 99, 255, 0.35);
+  background: transparent;
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
-.phone-status__dot:nth-child(1) {
-  opacity: 1;
+.phone-status__clue--found {
+  background: var(--accent);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.45);
 }
-.phone-status__dot:nth-child(2) {
-  opacity: 0.7;
+
+.phone-status__meter--trust-up .phone-status__bars {
+  animation: signal-meter-trust 0.65s ease;
 }
-.phone-status__dot:nth-child(3) {
-  opacity: 0.45;
+
+.phone-status__meter--clue-up .phone-status__clue--found {
+  animation: signal-meter-clue 0.65s ease;
+}
+
+@keyframes signal-meter-trust {
+  0%,
+  100% {
+    filter: none;
+  }
+  45% {
+    filter: drop-shadow(0 0 4px rgba(108, 99, 255, 0.85));
+  }
+}
+
+@keyframes signal-meter-clue {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-status__bar-fill {
+    transition: none;
+  }
+
+  .phone-status__meter--trust-up .phone-status__bars,
+  .phone-status__meter--clue-up .phone-status__clue--found {
+    animation: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .phone-status__meter-label {
+    display: none;
+  }
 }
 
 .phone-status__battery {

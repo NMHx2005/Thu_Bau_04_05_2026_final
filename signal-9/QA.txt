@@ -6,9 +6,21 @@ Reset verification:
 - After prologue, localStorage must not contain signalLost_finalWords or signalLost_notYetRound.
 - sessionStorage signalLost_dialDecoyPassed cleared on new prologue.
 
-Prologue:
+Prologue (no game frame — fullscreen):
+- index.html does NOT load gameFrame.js (avoids black-screen / clipped overlay).
+- Overlay "Tap to start" covers full screen (z-index 9999).
+- Slide 0 text visible immediately (no 3s fade from black).
+- After tap: rain loop starts (assets/audio/rain.mp3); sessionStorage signalLost_audioUnlocked=1.
+- Hint "click anywhere" appears after unlock; 4 clicks reach night1.html.
+
+Rain continuity:
+- Prologue tap → hear rain before first slide text advance.
+- night1.html: if audioUnlocked, rain auto-starts; if blocked, "Tap to hear rain" banner on explore.
+- Rain fades when leaving for Night 2.
+- resetGame does NOT clear signalLost_audioUnlocked (same browser session).
+
+Prologue (legacy checks):
 - Tap "Tap to start" enables audio (mobile gesture).
-- Hint "click anywhere" hidden until audio unlocked.
 - Slides advance only after unlock.
 
 Night order guards (no skip):
@@ -26,8 +38,17 @@ Night 1 — dial / lightbox:
 - Decoy first hint wrong digit; shake; then correct hint.
 
 Night 1 — rain / decode:
+- Rain audible on prologue after tap and on Night 1 explore (volume ~0.12).
 - Rain fades when leaving for Night 2 (Continue after signal decode).
 - Decode uses assets/images/LastLocation.png; falls back to Bedroom.png if missing.
+
+Signal meter (status bar on all phone phases):
+- Visible on night1 phase-phone, night2 (apps/memory/chat), night3.
+- Starts empty (trust 0, clues 0) after prologue reset.
+- Chat choice with positive trust → bars rise; negative → bars fall.
+- tryAwardClue (signal decode, memory, hidden thread, heartbeat) → next fragment dot fills.
+- Hover/title: "Connection X/10 · Fragments Y/4".
+- Replay hidden thread / signal puzzle: meter clues must not increase twice.
 
 Night 2 — hidden thread in-app:
 - After free-text + UNKNOWN follow-up, phase returns to Apps with banner; "Continue to Night 3" when hidden found.
