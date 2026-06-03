@@ -39,6 +39,7 @@
     </div>
     <script src="js/gameFrame.js"></script>
     <script src="js/state.js"></script>
+    <script src="js/stateNight3Extend.js"></script>
     <script src="js/audio.js"></script>
     <script src="js/ending.js"></script>
     <script>
@@ -47,6 +48,23 @@
         document.getElementById("line1").textContent =
           window.SignalLostEnding.readFinalLine() || "...";
         document.getElementById("finalEcho").textContent = "I love you. Call me back when you can.";
+        var phrases = window.SignalLostState ? window.SignalLostState.getPhrases() : [];
+        if (phrases.length > 0) {
+          var p = document.createElement("p");
+          p.className = "sub";
+          p.textContent = "you said, once: \u201c" + phrases[0] + "\u201d";
+          p.style.cssText =
+            "margin-top:1.4rem;font-size:0.78rem;color:rgba(152,152,176,0.6);font-style:italic;";
+          document.getElementById("stage").appendChild(p);
+        }
+        setTimeout(function () {
+          var a = document.createElement("a");
+          a.href = "credits.html";
+          a.textContent = "Credits";
+          a.style.cssText =
+            "display:block;margin-top:2rem;font-size:0.7rem;letter-spacing:0.25em;color:rgba(108,99,255,0.5);text-decoration:none;text-transform:uppercase;";
+          document.getElementById("stage").appendChild(a);
+        }, 9000);
         if (window.SignalLostAudio) {
           window.SignalLostAudio.resume();
           setTimeout(function () {

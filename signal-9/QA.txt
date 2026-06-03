@@ -79,10 +79,17 @@ Routing (Night 3 after word puzzle Continue):
 - T>=4 or C>=2 → ending-shell.html?outcome=static
 - else → ending-shell.html?outcome=notyet
 
-Ending FOUND (shell):
+Ending FOUND (shell + legacy ending-found.html):
 - line1 = word bank (getFinalWords).
 - If getPhrases().length > 0: "you said, once: …" under finalEcho (night0 phrase or Night 2 free-text).
 - Credits link appears ~9s → credits.html; Epilogue → after.html shows getFinalWords.
+
+Puzzle signposting:
+- Night 1 signal panel: hint "Slide until the picture is fully clear (100%)."
+- Night 2 memory: hint "Drag each card into chronological order, then tap Lock order."
+
+Assets:
+- Bedroom blur.png compressed (display-sized; under 300KB target).
 
 Boundary spot checks:
 1) T=3, C=3 → static (C>=2)

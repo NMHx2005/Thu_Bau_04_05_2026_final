@@ -315,6 +315,14 @@ body.night-bedroom-page>*:not(#finOverlay):not(#eyeLidTop):not(#eyeLidBottom):no
   accent-color: #6c63ff;
 }
 
+.puzzle-hint {
+  margin: 6px 0 0;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  text-align: center;
+  color: rgba(152, 152, 176, 0.55);
+}
+
 .signal-glitch-title {
   text-align: center;
   font-size: 0.85rem;
