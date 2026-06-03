@@ -82,6 +82,19 @@
     titleEl.textContent = lore.title;
     textEl.textContent = lore.text;
 
+    var loreMap = { window: "lore-window.html", coat: "lore-coat.html" };
+    var existingLink = inner.querySelector(".lore-link");
+    if (existingLink) existingLink.remove();
+    if (loreMap[id]) {
+      var link = document.createElement("a");
+      link.href = loreMap[id];
+      link.className = "lore-link";
+      link.textContent = "Read more \u2192";
+      link.style.cssText =
+        "display:block;margin-top:12px;font-size:0.75rem;color:#6c63ff;";
+      inner.appendChild(link);
+    }
+
     var rect = hotspotEl.getBoundingClientRect();
     var vw = window.innerWidth;
     var vh = window.innerHeight;
@@ -413,7 +426,7 @@
             window.SignalLostAudio.fadeRainOut(400);
           }
           setTimeout(function () {
-            window.location.href = "night2.html";
+            window.location.href = "continue-to-night2.html";
           }, 400);
         }, 1500);
       }, 560);

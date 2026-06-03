@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SIGNAL LOST. Between nights</title>
+    <link rel="stylesheet" href="css/prologue.css" />
+  </head>
+  <body class="prologue-root" id="prologueRoot">
+    <section class="prologue-slide is-active" aria-label="Night 2 summary">
+      <p class="prologue-text prologue-text--fade" id="bridgeText"></p>
+    </section>
+    <p class="prologue-hint">click anywhere to continue</p>
+    <script src="js/gameFrame.js"></script>
+    <script src="js/state.js"></script>
+    <script>
+      (function () {
+        var S = window.SignalLostState;
+        var trust = S ? S.getTrust() : 0;
+        var clues = S ? S.getClues() : 0;
+        var text =
+          "The signal is faint. You held back more than you let through.";
+        if (clues >= 3 && trust >= 7) {
+          text =
+            "The hidden thread is visible now. Night 3 will ask for something you cannot take back.";
+        }
+        document.getElementById("bridgeText").textContent = text;
+
+        document.getElementById("prologueRoot").addEventListener("click", function () {
+          window.location.href = "continue-to-night3.html";
+        });
+      })();
+    </script>
+  </body>
+</html>

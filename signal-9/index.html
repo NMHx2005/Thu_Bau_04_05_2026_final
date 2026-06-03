@@ -13,17 +13,10 @@
       <button type="button" class="audio-unlock__btn" id="btnAudioUnlock">Tap to start</button>
     </div>
 
-    <section class="prologue-slide is-active" data-slide="0" aria-label="Slide 1">
-      <p class="prologue-text prologue-text--instant"></p>
-    </section>
-    <section class="prologue-slide" data-slide="1" aria-label="Slide 2">
-      <p class="prologue-text"></p>
-    </section>
-    <section class="prologue-slide" data-slide="2" aria-label="Slide 3">
-      <p class="prologue-text"></p>
-    </section>
-    <section class="prologue-slide" data-slide="3" aria-label="Slide 4">
-      <p class="prologue-text"></p>
+    <section class="prologue-slide is-active" aria-label="Slide 1">
+      <p class="prologue-text prologue-text--instant" id="prologueText">
+        Dark. Then: a rectangle of light.
+      </p>
     </section>
     <p class="prologue-hint prologue-hint--hidden" id="prologueHint">click anywhere to continue</p>
 
@@ -32,15 +25,7 @@
     <script src="js/audio.js"></script>
     <script>
       (function () {
-        var slides = [
-          "Dark. Then: a rectangle of light.",
-          "Something familiar wakes before you do. A rectangle of light in a room you cannot name.",
-          "The rain is wrong, too steady, too close. The phone does not care. It only waits.",
-          "SIGNAL LOST",
-        ];
         var root = document.getElementById("prologueRoot");
-        var sections = [].slice.call(document.querySelectorAll(".prologue-slide"));
-        var idx = 0;
         var audioReady = false;
         var unlockEl = document.getElementById("audioUnlock");
         var hintEl = document.getElementById("prologueHint");
@@ -49,29 +34,9 @@
           window.SignalLostState.resetGame();
         }
 
-        function render() {
-          sections.forEach(function (sec, i) {
-            sec.classList.toggle("is-active", i === idx);
-            var p = sec.querySelector(".prologue-text");
-            p.textContent = slides[i];
-            p.classList.remove("prologue-text--fade", "prologue-text--instant");
-            if (i === idx && i === 0) {
-              p.classList.add("prologue-text--instant");
-            } else if (i === idx && i > 0) {
-              void p.offsetWidth;
-              p.classList.add("prologue-text--fade");
-            }
-          });
-        }
-
         function advance() {
           if (!audioReady) return;
-          if (idx >= sections.length - 1) {
-            window.location.href = "night1.html";
-            return;
-          }
-          idx++;
-          render();
+          window.location.href = "prologue-2.html";
         }
 
         function enableAudio() {
@@ -90,7 +55,6 @@
           }
           if (unlockEl) unlockEl.classList.add("audio-unlock--done");
           if (hintEl) hintEl.classList.remove("prologue-hint--hidden");
-          render();
         }
 
         document.getElementById("btnAudioUnlock").addEventListener("click", function (e) {
@@ -111,8 +75,6 @@
           }
           advance();
         });
-
-        render();
       })();
     </script>
   </body>

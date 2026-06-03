@@ -2,7 +2,7 @@
 
 Tài liệu này tóm tắt **trạng thái hiện tại**, **khoảng cách tới 90+**, và **checklist hành động** cụ thể cho dự án SIGNAL LOST (`signal-9/`).
 
-**Điểm ước lượng hiện tại:** ~82–87/100  
+**Điểm ước lượng hiện tại:** ~85–90/100 (sau expansion 25 HTML pages)  
 **Mục tiêu:** 90+ (Distinction)
 
 ---
@@ -27,22 +27,23 @@ SIGNAL LOST **không phải** website copy brand. Đây là **interactive narrat
 | Yêu cầu rubric | Dự án có |
 |---|---|
 | Concept riêng | SIGNAL LOST — identity, ký ức, lời chưa nói |
-| Story mở–thân–kết | Prologue → Night 1 → 2 → 3 → 3 ending |
+| Story mở–thân–kết | Prologue chain (6 trang) → Night 0 → Night 1 → 2 → 3 → 3 ending + credits/epilogue |
 | User agency | Trust, clues, free-text, word bank, hidden thread |
 | Không copy layout brand | Concept độc lập, không phải e-commerce clone |
 
 ### 2.2. Interactivity — Vượt yêu cầu (2–3 tương tác mạnh)
 
-Rubric yêu cầu ít nhất 2–3; dự án có **6–8 mechanic có ý nghĩa**:
+Rubric yêu cầu ít nhất 2–3; dự án có **8+ mechanic có ý nghĩa**:
 
-- Khám phá hotspot + lightbox zoom
+- Prologue click-through + Night 0 binary choice (`addPhrase`)
+- Khám phá hotspot + lightbox + lore deep-read (window/coat)
 - Dial decoy (số sai → rung → số đúng)
 - Canvas signal decode (Night 1)
-- Memory drag sortable (Night 2)
+- Memory drag sortable (Night 2) + optional side memory pages
 - Hidden thread (Notes / Browser)
 - Heartbeat puzzle (Night 3)
 - Timed chat 20 giây
-- Word bank → câu cuối hiện ở ending FOUND
+- Word bank echo → câu cuối ở ending FOUND
 
 Tương tác **ảnh hưởng story/kết quả**, không chỉ trang trí.
 
@@ -134,20 +135,18 @@ Click-only; chưa `prefers-reduced-motion`; keyboard cho lightbox/chat hạn ch�
 
 ### 5.1. README + demo online — Quan trọng nhất
 
-Giám khảo thường chơi 5–10 phút qua link, không đọc progress doc 639 dòng.
+Giám khảo thường chơi 5–10 phút qua link, không đọc progress doc đầy đủ.
 
-**Làm gì:**
+**Đã có trong `README.md`:**
 
-- Viết lại `README.md` gồm:
-  - Pitch 2–3 câu (concept là gì)
-  - Link **GitHub Pages** chơi trực tiếp
-  - 4–5 screenshot (Prologue, explore, chat, Night 2 apps, ending)
-  - Bảng ngắn: **Choice → Trust/Clue → Ending**
-  - Hướng dẫn test **FOUND ending** (perfect play checklist)
-  - Link `ATTRIBUTION.txt`
-- Deploy `signal-9/` lên GitHub Pages (`index.html` = prologue)
+- Pitch, link GitHub Pages, how-to-play (prologue chain → 3 nights)
+- Bảng **25 HTML pages**, bảng **logic unchanged vs added**
+- Trust/clue → ending + perfect play
+- Link docs: `MAJOR_PROJECT_PROGRESS_VI.md`, `QA.txt`, `credits.html`
 
-**Done khi:** mở link trên điện thoại + laptop, chơi được từ đầu đến ending.
+**Còn làm:** thêm screenshot thật vào `docs/screenshots/` (xem README trong folder đó).
+
+**Done khi:** mở link trên điện thoại + laptop, chơi được từ `index.html` đến ending (+ credits nếu FOUND).
 
 ---
 
@@ -191,15 +190,14 @@ Không cần cây dialogue lớn. Thêm **beat conditional** khi đã khám phá
 
 ---
 
-### 5.5. ATTRIBUTION / reference page — Rubric bắt buộc
+### 5.5. ATTRIBUTION / credits — Rubric bắt buộc
 
-**Làm gì:**
+**Đã có:**
 
-- Hoàn thiện `ATTRIBUTION.txt` (hoặc thêm `reference.html`)
-- Liệt kê: ảnh original, audio Freesound CC0, AI dùng ở đâu (nếu có)
+- `ATTRIBUTION.txt`, `reference.html`, `credits.html` (submission credits)
 - Link từ README
 
-**Done khi:** không còn dòng “replace before submission”.
+**Còn làm:** điền `[Your Name]` / `[Unit Code]` trong `credits.html` trước khi nộp.
 
 ---
 
@@ -222,10 +220,12 @@ Không cần đổi hết art. Chỉ **3 thứ** giám khảo thấy rõ:
 **Script gợi ý:**
 
 1. **Concept** (20s): “Interactive story qua điện thoại — những lời chưa nói.”
-2. **Flow** (40s): Prologue → explore → call → 3 nights → ending.
-3. **Agency** (40s): “Mỗi chat choice cộng/trừ trust; puzzle cho clue; cuối game trust + clue → 1 trong 3 ending.”
-4. **Demo live** (60s): decoy dial → hidden thread → word bank → FOUND (hoặc screenshot FOUND).
-5. **Tech** (20s): Vanilla JS, canvas, localStorage, modular files.
+2. **Flow** (45s): Prologue chain → night0 choice → 3 nights → ending → credits.
+3. **Agency** (40s): Trust/clue không đổi; thêm trang = đọc thêm, không đổi công thức FOUND.
+4. **Demo live** (55s): sound unlock → decoy dial → hidden thread → word bank → FOUND → Credits.
+5. **Tech** (20s): 25 HTML pages, vanilla JS, canvas, localStorage.
+
+Script đầy đủ: [PRESENTATION_3MIN.md](PRESENTATION_3MIN.md)
 
 In/em **QA matrix 1 trang** (từ `QA.txt`) đính kèm nộp bài.
 

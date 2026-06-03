@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGNAL LOST — After</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/game-frame.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #0a0a12;
+        color: #e8e8f0;
+        font-family: "Courier New", Courier, monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        text-align: center;
+      }
+      #stage {
+        max-width: 34rem;
+        line-height: 1.7;
+      }
+      #finalWords {
+        margin: 1.5rem 0;
+        color: #9090c8;
+        font-style: italic;
+      }
+      .closing {
+        margin-top: 2rem;
+        color: #9898b0;
+        font-size: 0.9rem;
+      }
+      .ref-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 28px;
+      }
+      .ref-back {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(108, 99, 255, 0.45);
+        background: rgba(108, 99, 255, 0.15);
+        color: #e8e8f0;
+        text-decoration: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body class="doc-page">
+    <div id="stage">
+      <p>You said what you needed to say.</p>
+      <p id="finalWords"></p>
+      <p class="closing">The signal does not need to be strong to be received.</p>
+      <div class="ref-nav">
+        <a class="ref-back" href="index.html">Begin again</a>
+        <a class="ref-back" href="credits.html">Credits</a>
+      </div>
+    </div>
+    <script src="js/gameFrame.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/stateNight3Extend.js"></script>
+    <script>
+      (function () {
+        var words =
+          window.SignalLostState && window.SignalLostState.getFinalWords
+            ? window.SignalLostState.getFinalWords()
+            : "still here";
+        document.getElementById("finalWords").textContent =
+          "\u201c" + words + "\u201d";
+      })();
+    </script>
+  </body>
+</html>

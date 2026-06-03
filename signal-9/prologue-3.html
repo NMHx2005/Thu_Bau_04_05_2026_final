@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SIGNAL LOST. Prologue</title>
+    <link rel="stylesheet" href="css/prologue.css" />
+  </head>
+  <body class="prologue-root" id="prologueRoot">
+    <section class="prologue-slide is-active" aria-label="Slide 3">
+      <p class="prologue-text prologue-text--fade">
+        The rain is wrong, too steady, too close. The phone does not care. It only waits.
+      </p>
+    </section>
+    <p class="prologue-hint">click anywhere to continue</p>
+    <script src="js/audio.js"></script>
+    <script>
+      (function () {
+        try {
+          if (
+            sessionStorage.getItem("signalLost_audioUnlocked") === "1" &&
+            window.SignalLostAudio
+          ) {
+            window.SignalLostAudio.resume();
+            window.SignalLostAudio.startRainLoop();
+          }
+        } catch (e) {}
+        document.getElementById("prologueRoot").addEventListener("click", function () {
+          window.location.href = "prologue-4.html";
+        });
+      })();
+    </script>
+  </body>
+</html>

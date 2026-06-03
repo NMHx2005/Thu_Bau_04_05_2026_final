@@ -1,6 +1,8 @@
 # SIGNAL LOST. Tài liệu dự án hoàn chỉnh
 
-Tài liệu này bao phủ **toàn bộ phạm vi dự án** gồm Prologue, Night 1, Night 2, Night 3, và hệ thống ba nhánh ending. Nó thay thế tài liệu checkpoint Tuần 9 trước đó (50%).
+Tài liệu này bao phủ **toàn bộ phạm vi dự án**: chuỗi prologue (9 bước HTML), Night 1–3, bridge pages, side pages, ba nhánh ending, credits/epilogue. **25 file HTML** trong `signal-9/` (+ `index.html` redirect ở repo root).
+
+**Logic gameplay (trust, clues, puzzle, ending):** không đổi so với bản 3-night gốc. Mở rộng chủ yếu là **navigation narrative**, trang đọc thêm, và polish ending FOUND.
 
 ---
 
@@ -8,13 +10,17 @@ Tài liệu này bao phủ **toàn bộ phạm vi dự án** gồm Prologue, Nig
 
 | Phase | Trạng thái |
 |---|---|
-| Prologue (4 slide, reset state) | Hoàn chỉnh |
-| Night 1. Khám phá + dial + chat + signal decode | Hoàn chỉnh |
-| Night 2. Apps + memory drag + chat + free-text + hidden thread | Hoàn chỉnh |
-| Night 3. Heartbeat puzzle + timed chat + reveal + word bank | Hoàn chỉnh |
-| Ending routing (SIGNAL FOUND / NOT YET / STATIC) | Hoàn chỉnh |
-| Game frame (viewport 1200px 16:9, centered) | Hoàn chỉnh |
-| Dial decoy mechanic (số sai lần đầu, rung, rồi số đúng) | Hoàn chỉnh |
+| Prologue chain (`index` → `prologue-2/3/4` → `waking-up` → `night0`) | Hoàn chỉnh |
+| Night 0 flashback + choice (`addPhrase`, không đổi trust/clue) | Hoàn chỉnh |
+| Night 1. Khám phá + dial + chat + signal decode + lore deep-links | Hoàn chỉnh |
+| Bridge `continue-to-night2` (flavour trust) | Hoàn chỉnh |
+| Night 2. Apps + memory + chat + free-text + hidden thread + side pages | Hoàn chỉnh |
+| Bridge `between-nights` → `continue-to-night3` | Hoàn chỉnh |
+| Night 3. Heartbeat + timed chat + word bank echo + routing | Hoàn chỉnh |
+| Ending `ending-shell` + phrase line + Credits link | Hoàn chỉnh |
+| Post-game `credits.html`, `after.html` | Hoàn chỉnh |
+| Game frame (1200px 16:9) + `doc-page` scroll | Hoàn chỉnh |
+| Dial decoy mechanic | Hoàn chỉnh |
 
 ---
 
@@ -34,24 +40,85 @@ Xây dựng bằng vanilla HTML, CSS, và JavaScript thuần. Không framework, 
 ## 2. Luồng game đầy đủ
 
 ```
-index.html (Prologue, reset state)
+index.html (slide 1 + audio unlock + reset state)
+  ↓
+prologue-2.html → prologue-3.html → prologue-4.html (title card) → waking-up.html → night0.html (choice → addPhrase)
   ↓
 night1.html
   Khám phá phòng → dial pad (số decoy → rung → số đúng) → chat → signal decode
   ↓
+continue-to-night2.html (flavour theo trust)
+  ↓
 night2.html
-  Apps (Photos / Notes / Browser / Voicemail) → memory drag → chat → free-text → hidden thread
+  Apps + side pages (memory-draft, east entrance, february, voicemail transcript) → memory drag → chat → free-text → hidden thread
   ↓ (cuối Night 2: nút trên màn app)
-  Nếu đã mở hidden thread → "Continue to Night 3" → night3.html
-  Nếu chưa → "Continue" (nhắc mở Drafts / Draft sync), thử lại sau khi mở thread
-  ↓ (tùy chọn / test)
-continue-to-night3.html (cổng kiểm tra `canEnterNight3`, không bắt buộc nếu đã qua Night 2)
+  Nếu đã mở hidden thread → "Continue to Night 3" → between-nights.html → continue-to-night3.html
+  Nếu chưa → "Continue" (nhắc mở Drafts / Draft sync)
   ↓
 night3.html
-  Heartbeat puzzle → timed chat → reveal chat → word bank → nút routing
+  Heartbeat puzzle → timed chat → reveal chat → word bank (echo 1.8s) → nút routing
   ↓
 ending-shell.html?outcome=found|static|notyet
+  (found: phrase Night 0/2 + Credits link → credits.html → after.html)
 ```
+
+---
+
+## 2.1. Prologue chain (chi tiết)
+
+| Trang | Nội dung | Ghi chú |
+|---|---|---|
+| `index.html` | Slide 1 + **Tap to enable sound** | Gọi `resetGame()` một lần |
+| `prologue-2.html` | Slide 2 | Click anywhere; rain carry-over |
+| `prologue-3.html` | Slide 3 | |
+| `prologue-4.html` | Title card **SIGNAL LOST** | CSS `.prologue-slide--title` |
+| `waking-up.html` | 3 slide thức dậy | |
+| `night0.html` | Flashback thư viện 4 slide + 2 nút | `addPhrase("you sent it")` hoặc `"you deleted it again"` → `night1.html` |
+
+Prologue **không** load `gameFrame.js` (fullscreen). Prologue **không** scroll — chỉ click để tiếp.
+
+**Audio:** `sessionStorage.signalLost_audioUnlocked` set ở `index.html`; các trang sau gọi `startRainLoop()` nếu đã unlock.
+
+---
+
+## 2.2. Bridge pages (chỉ flavour, không đổi điểm)
+
+### `continue-to-night2.html`
+
+Đọc `getTrust()`:
+
+| Trust | Text |
+|---|---|
+| 0–3 | You gave nothing. The line is still cold. |
+| 4–6 | Something passed between you. Not enough to name yet. |
+| 7+ | The line is warm. Unknown is listening. |
+
+Click anywhere → `night2.html`.
+
+### `between-nights.html`
+
+Đọc `getTrust()` + `getClues()`:
+
+| Điều kiện | Text |
+|---|---|
+| C ≥ 3 **và** T ≥ 7 | The hidden thread is visible now. Night 3 will ask for something you cannot take back. |
+| else | The signal is faint. You held back more than you let through. |
+
+Click anywhere → `continue-to-night3.html` (gate `canEnterNight3` như cũ).
+
+---
+
+## 2.3. Side pages & lore (tùy chọn, `history.back()`)
+
+| Trang | Vào từ | Không ảnh hưởng T/C |
+|---|---|---|
+| `memory-draft.html` | Notes → View full draft | ✓ |
+| `memory-east-entrance.html` | Browser search link | ✓ |
+| `memory-three-weeks.html` | Browser search link | ✓ |
+| `voicemail-transcript.html` | Voicemail T ≥ 5 | ✓ |
+| `lore-window.html`, `lore-coat.html` | Lightbox Read more → | ✓ |
+
+CSS: `css/side-page.css`. Trang credits/reference/after: `body.doc-page` + scroll trong khung (`game-frame.css`).
 
 ---
 
@@ -83,7 +150,7 @@ Nút khóa dial: **"Use the phone"** (`#btnToDial`), bật khi đã mở đủ 5
 | Cửa sổ | No Reflection | Không có phản chiếu. Clue cài sẵn về danh tính |
 | Mảnh giấy | The Number | Số điện thoại 0427 318 247, hơi mờ |
 | Ảnh chụp | The Photograph | Khuôn mặt gần như nhận ra được, không bao giờ hoàn toàn |
-| Áo khoác | Still Warm | Vẫn ấm bên cửa. Nếu vào trước khi gọi, Unknown nhắc đến trong chat |
+| Áo khoác | Still Warm | Vẫn ấm; Unknown nhắc coat nếu đã chạm trước khi gọi |
 
 Phải mở cả năm mới mở khoá nút "Continue to Dial". Đây là gating có chủ đích: player phải trải nghiệm không gian trước khi liên lạc ra ngoài.
 
@@ -99,7 +166,9 @@ Nhấp hotspot → lightbox zoom từ vị trí vật thể ra trung tâm màn h
 4. Force reflow bằng `lb.offsetWidth`
 5. Thêm transition và set `transform: translate(0,0) scale(1)` → trình duyệt nội suy
 
-**Code:** `signal-9/js/night1.js` → `showLightbox()`, `closeLightbox()`
+**Read more (window, coat):** Trong `showLightbox()`, link `.lore-link` → `lore-window.html` / `lore-coat.html`. Lore ngắn trong lightbox; trang lore là first-person mở rộng.
+
+**Code:** `signal-9/js/night1.js` → `showLightbox()`, `closeLightbox()` · `js/night1Data.js` → `LORE`
 
 ---
 
@@ -187,7 +256,7 @@ Sau khi hoàn thành, nút "Continue to Night 2" hiện ra.
 1. Mi mắt animate **đóng** 0.55s (ease-in)
 2. Div `#transitionText` hiện: "Night One ends." rồi "The signal holds."
 3. Audio mưa fade out
-4. Điều hướng sang `night2.html`
+4. Điều hướng sang `continue-to-night2.html` (không vào `night2.html` thẳng)
 5. Night 2 bắt đầu với mi mắt đóng, animate **mở chậm** 2.2s (ease-out, một lần, không nháy)
 
 Night 1 **nháy ba lần** = thức dậy mất phương hướng. Night 2 **mở chậm một lần** = nhận thức có chủ đích. Khác biệt là có chủ đích.
@@ -205,9 +274,11 @@ Night 2 là màn hình chính điện thoại với bốn app. Mỗi app mở l�
 | Photos | Camera roll bị lỗi ngày 3/3. Ảnh mờ hiện rõ một chút khi chạm |
 | Notes | Danh sách việc sẽ không hoàn thành. Nháp. Mục "Drafts, 3 unsent" tiết lộ hidden thread |
 | Browser | Lịch sử tìm kiếm ngày cuối: giờ thư viện, ghế công viên, nghe điện thoại qua cửa. Mục "Draft sync, 3 pending" tiết lộ hidden thread |
-| Voicemail | Bị khoá cho đến trust T ≥ 5. Ở T ≥ 5 hiện "một tin nhắn chưa nghe" |
+| Voicemail | Bị khoá cho đến trust T ≥ 5. Ở T ≥ 5: Play message + link **Read transcript** → `voicemail-transcript.html` |
 
-**Code:** `signal-9/js/night2.js` → `renderApp(name)`
+**Side links (HTML trong `night2Data.js`):** Notes → `memory-draft.html`; Browser → `memory-east-entrance.html`, `memory-three-weeks.html`.
+
+**Code:** `signal-9/js/night2.js` → `renderApp(name)` · `js/night2Data.js`
 
 ---
 
@@ -250,7 +321,7 @@ Cả Notes và Browser chứa phần có thể mở. Khi nhấp:
 ## 12. Vào Night 3
 
 **Luồng chính (trong `night2.html`):** Sau free-text, `setupNight2Exit()` hiện banner trên màn app:
-- Đã `getDoneHidden()` → banner "The buried thread is open…", nút **"Continue to Night 3"** → `night3.html`
+- Đã `getDoneHidden()` → banner "The buried thread is open…", nút **"Continue to Night 3"** → `between-nights.html` → `continue-to-night3.html` → `night3.html`
 - Chưa → banner khoá, nút **"Continue"** quay lại app; player phải **nhấp expander** Drafts (Notes) hoặc Draft sync (Browser), không chỉ mở app
 
 **Cổng phụ (test / bookmark):** `continue-to-night3.html` kiểm tra `canEnterNight3()` (= `getDoneHidden()`):
@@ -333,8 +404,7 @@ I / needed / to / say / that / it / was / love / sorry / home / wait / enough
 
 - Nhấp token → append vào câu đang xây
 - `#wordBuilt` hiển thị câu + "…"
-- Nút "Done": gọi `setFinalWords(line)` → lưu vào `localStorage.signalLost_finalWords`
-- Overlay `#finOverlay` hiện câu vừa xây + nút **"Continue"** (`#btnRouteEnding`) → routing ending
+- Nút "Done": `setFinalWords(line)` → echo câu trong `#wordBuilt` (italic, typographic quotes) → **delay 1.8s** → overlay `#finOverlay` + nút **Continue** → `ending-shell.html`
 
 **Code:** `signal-9/js/night3.js` → `startWords()`
 
@@ -391,7 +461,9 @@ Night 1 có 3 lần chọn (tối đa +3). Night 2 có 1 lần chọn (tối đa
 
 **Tại sao điều kiện AND (không phải OR):** Trust cao không đủ nếu player skip đa số nội dung. Clue cao không đủ nếu player cold và phòng thủ trong chat. Cả hai phải cùng đúng.
 
-**Màn hình:** Nền đen, chữ trắng. Hiển thị câu từ `readFinalLine()` (cụm từ player xây từ word bank). Dòng: "they'll hear it. somehow." Và: "I love you. Call me back when you can." Sau đó nền dần chuyển sáng lên (`#f5f5f8`, `#1a1a2e`) — từ tối đến sáng.
+**Màn hình (`ending-shell.html?outcome=found`):** Dòng chính = `readFinalLine()` (word bank). Sub: "they'll hear it. somehow." + "I love you. Call me back when you can." Nếu `getPhrases().length > 0`: thêm `you said, once: "…"` (night0 choice hoặc free-text Night 2 đầu tiên). Sau ~9s: link **Credits** → `credits.html` → `after.html` (epilogue hiện `getFinalWords()`).
+
+**Legacy:** `ending-found.html` không dùng trong luồng chính.
 
 **Audio:** `playEndingFoundSequence()` — chuỗi âm thanh kết thúc đặc biệt.
 
@@ -550,19 +622,27 @@ Dùng `sessionStorage` (không phải `localStorage`) để decoy reset về đ�
 
 ---
 
-## 22. File map đầy đủ
+## 22. File map đầy đủ (25 HTML trong signal-9/)
 
 | File | Mục đích |
 |---|---|
-| `index.html` | Prologue 4 slide, reset state |
-| `night1.html` | UI Night 1: cảnh khám phá, dial pad, phone screen, signal panel |
-| `night2.html` | UI Night 2: lưới app, memory drag, chat |
-| `night3.html` | UI Night 3: heartbeat, timed chat, reveal, word bank |
-| `continue-to-night3.html` | Cổng kiểm tra điều kiện vào Night 3 |
-| `ending-shell.html` | Routing ending duy nhất (nhận `?outcome=`) |
-| `ending-found.html` | Standalone ending FOUND (legacy) |
-| `ending-notyet.html` | Standalone ending NOT YET (legacy) |
-| `ending-static.html` | Standalone ending STATIC (legacy) |
+| `index.html` | Prologue slide 1 + audio unlock + reset |
+| `prologue-2.html`, `prologue-3.html`, `prologue-4.html` | Prologue slides + title card |
+| `waking-up.html` | 3 slide thức dậy |
+| `night0.html` | Flashback March 2 + choice → `addPhrase` |
+| `night1.html` | UI Night 1: explore, dial, chat, signal |
+| `continue-to-night2.html` | Bridge flavour trust |
+| `night2.html` | UI Night 2: apps, memory, chat |
+| `memory-draft.html`, `memory-east-entrance.html`, `memory-three-weeks.html` | Side memory pages |
+| `voicemail-transcript.html` | Voicemail transcript |
+| `between-nights.html` | Bridge flavour trust + clues |
+| `continue-to-night3.html` | Gate Night 3 (`canEnterNight3`) |
+| `night3.html` | UI Night 3 |
+| `lore-window.html`, `lore-coat.html` | Lore deep-read |
+| `ending-shell.html` | Routing ending (`?outcome=`) |
+| `ending-found.html`, `ending-notyet.html`, `ending-static.html` | Legacy standalone |
+| `credits.html`, `after.html` | Post-game |
+| `reference.html` | Attribution reference (giữ) |
 | `js/night1.js` | Hotspot, lore, wakeup, lightbox, dial decoy, chat N1, signal decode, chuyển cảnh |
 | `js/night2.js` | Apps, memory drag, chat N2, free-text, hidden thread |
 | `js/night3.js` | Heartbeat, soften loop, timed chat, reveal, word bank, routing |
@@ -580,9 +660,10 @@ Dùng `sessionStorage` (không phải `localStorage`) để decoy reset về đ�
 | `css/animations.css` | msg-enter, dial-shake |
 | `css/night2-ui.css` | Nút back/continue Night 2 |
 | `css/night3.css` | Layout Night 3 (`#phase-night3`, `#phoneScreen3`, fin overlay trong frame) |
-| `css/prologue.css` | Prologue slides |
+| `css/prologue.css` | Prologue slides, title card, night0 choices |
+| `css/side-page.css` | Memory / lore popup pages |
 | `css/jquery-overrides.css` | jQuery UI sortable (memory drag) |
-| `css/game-frame.css` | Viewport frame 1200px, phase stack, Night 3 phone fit |
+| `css/game-frame.css` | Viewport 1200px, `.doc-page` scroll |
 
 ---
 
@@ -600,7 +681,10 @@ Dùng `sessionStorage` (không phải `localStorage`) để decoy reset về đ�
 Đ: STATIC là trạng thái trung tính — tín hiệu đủ yếu để không hoàn chỉnh nhưng vẫn có mặt. Nó là điểm dừng tự nhiên cho cả "chưa sẵn sàng" lẫn "đã cố nhưng không đủ".
 
 **H: Cụm từ word bank được dùng ở đâu trong ending?**
-Đ: `setFinalWords(line)` lưu câu vào `localStorage.signalLost_finalWords`. Trang ending FOUND gọi `readFinalLine()` (từ `ending.js`) → `SignalLostState.getFinalWords()` (override trong `stateNight3Extend.js`) → trả về câu từ word bank. Câu này hiển thị làm dòng chính của ending FOUND.
+Đ: `setFinalWords(line)` lưu vào `signalLost_finalWords`. `ending-shell.html?outcome=found` gọi `readFinalLine()` → dòng chính. `getPhrases()[0]` (night0 hoặc Night 2 free-text) hiện thêm dòng phụ `you said, once: …` nếu có. `after.html` hiện lại `getFinalWords()` trong epilogue.
+
+**H: Logic trust/clue có đổi sau khi thêm 25 trang không?**
+Đ: Không. Bridge và side pages không gọi `addTrust` / `tryAwardClue`. Night 0 chỉ `addPhrase`. Điều kiện FOUND / STATIC / NOT YET giữ nguyên.
 
 ### Về kỹ thuật
 
@@ -629,10 +713,12 @@ Dùng `sessionStorage` (không phải `localStorage`) để decoy reset về đ�
 - Canvas decode (Night 1) và canvas heartbeat (Night 3) cùng module
 - CSS specificity bug phát hiện và giải quyết trong production code
 - Hotspot Night 1: chấm tím trên nền phòng nét, không sprite `obj_*.png` trên scene
-- Night 2 → Night 3: nút trực tiếp trên màn app khi hidden thread mở; `continue-to-night3.html` là cổng phụ
+- Night 2 → Night 3: `between-nights.html` → `continue-to-night3.html` (gate)
+- 25 HTML pages; prologue tách file; side pages + lore + credits/epilogue
+- FOUND: phrase line + Credits ~9s; word bank echo 1.8s
 - Night 3 UI: `#phase-night3` + `night3.css` trong game frame
 - Copy player-facing: không dùng em dash trong HTML/JS game chính; `ending-shell.html` NOT YET round 2 vẫn có dấu ngoặc kép typographic (`\u201c`) trong một dòng
 
 ---
 
-*Tài liệu phản ánh trạng thái code tại signal-9/ tính đến 20/05/2026.*
+*Tài liệu phản ánh trạng thái code tại signal-9/ tính đến 03/06/2026 (25-page expansion).*

@@ -163,7 +163,13 @@
       b.textContent = w;
       b.addEventListener("click", function () {
         built.push(w);
-        byId("wordBuilt").textContent = built.join(" ") + " …";
+        var builtEl = byId("wordBuilt");
+        builtEl.textContent = built.join(" ") + " …";
+        builtEl.style.color = "";
+        builtEl.style.fontStyle = "";
+        builtEl.style.transition = "";
+        var echoReply = builtEl.parentNode.querySelector(".word-echo-reply");
+        if (echoReply) echoReply.remove();
         if (window.SignalLostAudio) window.SignalLostAudio.playTypingTick();
       });
       bank.appendChild(b);
@@ -172,8 +178,17 @@
     byId("btnWordsDone").onclick = function () {
       var line = built.join(" ").trim() || "(silence)";
       if (window.SignalLostState) window.SignalLostState.setFinalWords(line);
-      byId("finLine").textContent = line;
-      byId("finOverlay").classList.remove("night-hidden");
+
+      var builtEl = byId("wordBuilt");
+      builtEl.textContent = "\u201c" + line + "\u201d";
+      builtEl.style.color = "#9090c8";
+      builtEl.style.fontStyle = "italic";
+      builtEl.style.transition = "color 1.2s ease";
+
+      setTimeout(function () {
+        byId("finLine").textContent = line;
+        byId("finOverlay").classList.remove("night-hidden");
+      }, 1800);
     };
     byId("btnRouteEnding").onclick = function () {
       var T = window.SignalLostState.getTrust();

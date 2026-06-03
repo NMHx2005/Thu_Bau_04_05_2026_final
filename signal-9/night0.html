@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SIGNAL LOST. March 2</title>
+    <link rel="stylesheet" href="css/prologue.css" />
+  </head>
+  <body class="prologue-root" id="prologueRoot">
+    <section class="prologue-slide is-active" data-slide="0" aria-label="Slide 1">
+      <p class="prologue-text prologue-text--instant"></p>
+    </section>
+    <section class="prologue-slide" data-slide="1" aria-label="Slide 2">
+      <p class="prologue-text"></p>
+    </section>
+    <section class="prologue-slide" data-slide="2" aria-label="Slide 3">
+      <p class="prologue-text"></p>
+    </section>
+    <section class="prologue-slide" data-slide="3" aria-label="Slide 4">
+      <p class="prologue-text"></p>
+      <div class="prologue-choices night-hidden" id="night0Choices">
+        <button type="button" class="prologue-choice" id="btnSent">You sent it.</button>
+        <button type="button" class="prologue-choice" id="btnDeleted">You deleted it again.</button>
+      </div>
+    </section>
+    <p class="prologue-hint" id="prologueHint">click anywhere to continue</p>
+
+    <script src="js/state.js"></script>
+    <script src="js/audio.js"></script>
+    <script>
+      (function () {
+        var slides = [
+          "March 2. The library is almost empty. Fluorescent light on stacks that do not care who reads them.",
+          "You wrote something on your phone. Not a draft for later. A line you meant to send before you lost the nerve.",
+          "Your thumb hovered over send. The east entrance was twenty steps away. Someone you knew was walking through it.",
+          "The message is still in your outbox. Or it is not. You cannot remember which choice you made.",
+        ];
+        var root = document.getElementById("prologueRoot");
+        var sections = [].slice.call(document.querySelectorAll(".prologue-slide"));
+        var choicesEl = document.getElementById("night0Choices");
+        var hintEl = document.getElementById("prologueHint");
+        var idx = 0;
+        var onChoiceSlide = false;
+
+        try {
+          if (
+            sessionStorage.getItem("signalLost_audioUnlocked") === "1" &&
+            window.SignalLostAudio
+          ) {
+            window.SignalLostAudio.resume();
+            window.SignalLostAudio.startRainLoop();
+          }
+        } catch (e) {}
+
+        function render() {
+          onChoiceSlide = idx === sections.length - 1;
+          sections.forEach(function (sec, i) {
+            sec.classList.toggle("is-active", i === idx);
+            var p = sec.querySelector(".prologue-text");
+            p.textContent = slides[i];
+            p.classList.remove("prologue-text--fade", "prologue-text--instant");
+            if (i === idx && i === 0) {
+              p.classList.add("prologue-text--instant");
+            } else if (i === idx && i > 0) {
+              void p.offsetWidth;
+              p.classList.add("prologue-text--fade");
+            }
+          });
+          if (choicesEl) {
+            choicesEl.classList.toggle("night-hidden", !onChoiceSlide);
+          }
+          if (hintEl) {
+            hintEl.classList.toggle("prologue-hint--hidden", onChoiceSlide);
+          }
+        }
+
+        function advance() {
+          if (onChoiceSlide) return;
+          if (idx >= sections.length - 1) return;
+          idx++;
+          render();
+        }
+
+        function goNight1(phrase) {
+          if (window.SignalLostState && window.SignalLostState.addPhrase) {
+            window.SignalLostState.addPhrase(phrase);
+          }
+          window.location.href = "night1.html";
+        }
+
+        root.addEventListener("click", function (e) {
+          if (onChoiceSlide) return;
+          if (e.target.closest && e.target.closest(".prologue-choice")) return;
+          advance();
+        });
+
+        document.getElementById("btnSent").addEventListener("click", function (e) {
+          e.stopPropagation();
+          goNight1("you sent it");
+        });
+        document.getElementById("btnDeleted").addEventListener("click", function (e) {
+          e.stopPropagation();
+          goNight1("you deleted it again");
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

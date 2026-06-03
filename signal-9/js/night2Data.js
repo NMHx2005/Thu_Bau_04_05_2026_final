@@ -44,12 +44,14 @@
     notesIntro:
       "<p>To-do (never done):</p>" +
       "<ul><li>return call</li><li>water plants</li><li>say it plainly</li></ul>" +
-      "<p>\u201cI don\u2019t want to disappear mid-sentence.\u201d</p>",
+      "<p>\u201cI don\u2019t want to disappear mid-sentence.\u201d</p>" +
+      "<p><a href='memory-draft.html' style='color:#6c63ff'>View full draft \u2192</a></p>",
     browserIntro:
       "<p>Search history, last day:</p>" +
       "<ul>" +
       "<li>how late does the library close</li>" +
-      "<li>park bench near east entrance</li>" +
+      "<li><a href='memory-east-entrance.html' style='color:#6c63ff'>park bench near east entrance</a></li>" +
+      "<li><a href='memory-three-weeks.html' style='color:#6c63ff'>what I said in february</a></li>" +
       "<li>can you hear a phone ring through a door</li>" +
       "</ul>",
     voicemailLocked:

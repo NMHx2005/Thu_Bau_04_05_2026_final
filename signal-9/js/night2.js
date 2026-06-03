@@ -183,6 +183,7 @@
       if (window.SignalLostState && window.SignalLostState.canUnlockVoicemail && window.SignalLostState.canUnlockVoicemail()) {
         body.innerHTML =
           (n2d ? n2d.voicemailUnlockedIntro : "<p>One unheard message.</p>") +
+          "<p><a href='voicemail-transcript.html' style='color:#6c63ff'>Read transcript \u2192</a></p>" +
           "<p><button type='button' class='n2-link-btn n2-link-btn--accent' id='btnPlayVoicemail'>" +
           (n2d ? n2d.voicemailPlayLabel : "Play message") +
           "</button></p>";
@@ -375,7 +376,7 @@
       ban.textContent = "The buried thread is open. Night 3 is on the line.";
       btn.textContent = "Continue to Night 3";
       btn.onclick = function () {
-        window.location.href = "night3.html";
+        window.location.href = "between-nights.html";
       };
       return;
     }

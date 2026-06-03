@@ -7,27 +7,31 @@
   var LORE = {
     laptop: {
       title: "The Unsent Draft",
-      text: "A half-written unsent message. Cursor still blinking. The player has been trying to say something and could not finish it.",
+      text:
+        "A message half-written, cursor still blinking at the end of an unfinished sentence. You have been trying to say something for long enough that the screen dimmed once and you had to move the mouse to bring it back.",
       img: "assets/images/night1/obj_laptop.png",
     },
     window: {
       title: "No Reflection",
-      text: "Rain on the glass, but no reflection. A planted clue. Most players read it as an art style choice on first playthrough and only catch it on replay.",
+      text:
+        "Rain on the glass. Your shape should be there — a smudge of warmth against the dark outside. It is not. You stand closer. Still nothing. The glass is honest in a way the room is not.",
       img: "assets/images/night1/obj_window.png",
     },
     note: {
       title: "The Number",
-      text: "A handwritten phone number, slightly smudged. 0427 318 247. A small symbol in the corner: ▣.",
+      text: "A handwritten phone number, slightly smudged. 0427 318 247. ▣",
       img: "assets/images/night1/obj_note.png",
     },
     photo: {
       title: "The Photograph",
-      text: "A blurred image of a person. Warm frame. The face is almost recognisable, but not quite.",
+      text:
+        "Someone you almost recognise. The blur is not a flaw — you think you did this deliberately, kept the image just soft enough that you could not be certain. Certainty would have required a decision.",
       img: "assets/images/night1/obj_photo.png",
     },
     coat: {
       title: "Still Warm",
-      text: "Still warm by the door. If you read this before you call, Unknown will remember.",
+      text:
+        "Still warm by the door. You know this coat. The particular weight of it, the way it sat on someone's shoulders on a night you have not stopped returning to. It should not still be warm.",
       img: "assets/images/night1/obj_coat.png",
     },
   };
@@ -35,7 +39,8 @@
   var HOTSPOT_BEATS = {
     note: "You read the number before you dialled. Smudged ink still counts.",
     window: "No reflection. You noticed. The room is refusing to lie.",
-    laptop: "The draft on your laptop. Same sentence, different screen.",
+    laptop:
+      "The sentence on your laptop. You have been trying to finish it longer than you have been here.",
     photo: "You looked at the photograph first. Blur is mercy until you're ready.",
     coat: "You already touched the coat. I'm not guessing your room. I'm reading what you carried out of it.",
   };

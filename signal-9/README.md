@@ -16,12 +16,47 @@ You wake without a name. **Unknown** calls. The story is about identity, memory,
 ## How to play
 
 1. Open the demo link (or run locally — see below).
-2. **Tap to enable sound** on the prologue screen (required on mobile).
-3. Click through prologue slides → **Night 1**: open all five hotspots → dial → chat → signal decode.
-4. **Night 2**: open four apps → memory order puzzle → chat → free text → find **hidden thread** in Notes or Browser.
-5. **Night 3**: heartbeat puzzle → timed chat → word bank → ending.
+2. **Tap to enable sound** on `index.html` (required on mobile).
+3. Click through the prologue chain: `index.html` → `prologue-2/3/4` → `waking-up.html` → `night0.html` (March 2 choice) → **Night 1**.
+4. **Night 1**: open all five hotspots → dial → chat → signal decode → `continue-to-night2.html`.
+5. **Night 2**: four apps (memory side links in Notes/Browser/Voicemail) → memory puzzle → chat → free text → hidden thread → `between-nights.html` → `continue-to-night3.html`.
+6. **Night 3**: heartbeat → timed chat → word bank → ending (`ending-shell.html`). SIGNAL FOUND shows a **Credits** link after ~9s.
 
-Full design doc: [MAJOR_PROJECT_PROGRESS_VI.md](MAJOR_PROJECT_PROGRESS_VI.md)
+Full design doc: [MAJOR_PROJECT_PROGRESS_VI.md](MAJOR_PROJECT_PROGRESS_VI.md) (Vietnamese) · [MAJOR_PROJECT_PROGRESS_EN.md](MAJOR_PROJECT_PROGRESS_EN.md)
+
+### Game logic vs. navigation
+
+| Unchanged | Added (narrative only) |
+|---|---|
+| Trust 0–10, clues 0–4, all puzzles, 3 endings | Prologue split across 6 pages + `night0` choice |
+| Hidden thread required for Night 3 | Bridge text pages between nights |
+| Perfect-play FOUND: T=7, C≥3 | Optional memory/lore/voicemail pages (`history.back`) |
+| Dial decoy, chat scripts | FOUND: extra phrase line + Credits / epilogue |
+
+---
+
+## All HTML pages (25 in `signal-9/`)
+
+| # | File | Role |
+|---|------|------|
+| 1 | `index.html` | Start: sound unlock + reset |
+| 2–4 | `prologue-2/3/4.html` | Prologue slides + title |
+| 5 | `waking-up.html` | Wake-up slides |
+| 6 | `night0.html` | March 2 flashback + choice |
+| 7 | `night1.html` | Night 1 gameplay |
+| 8 | `continue-to-night2.html` | Bridge |
+| 9 | `night2.html` | Night 2 gameplay |
+| 10–13 | `memory-draft`, `memory-east-entrance`, `memory-three-weeks`, `voicemail-transcript` | Side reads |
+| 14 | `between-nights.html` | Bridge |
+| 15 | `continue-to-night3.html` | Night 3 gate |
+| 16 | `night3.html` | Night 3 gameplay |
+| 17–18 | `lore-window.html`, `lore-coat.html` | Lore deep-read |
+| 19 | `ending-shell.html` | Main endings |
+| 20–22 | `ending-found/static/notyet.html` | Legacy URLs |
+| 23–24 | `credits.html`, `after.html` | Post-game |
+| 25 | `reference.html` | Asset attribution |
+
+Repo root `../index.html` redirects here.
 
 ---
 
@@ -33,7 +68,8 @@ Full design doc: [MAJOR_PROJECT_PROGRESS_VI.md](MAJOR_PROJECT_PROGRESS_VI.md)
 | Chat choices | Add or subtract **trust** (0–10) |
 | Puzzles / hidden thread | Award **clues** (0–4), once each |
 | Night 1 exploration | Extra Unknown lines if you visited objects first |
-| Word bank (Night 3) | Your sentence appears in **SIGNAL FOUND** |
+| Word bank (Night 3) | Your sentence is the main line in **SIGNAL FOUND** |
+| Night 0 choice / Night 2 free-text | Optional `you said, once: "…"` on FOUND |
 
 ### Ending rules
 
@@ -89,26 +125,35 @@ Or from repo root, open `index.html` (redirects to `signal-9/`).
 
 | File | Role |
 |---|---|
+| `index.html` → `prologue-2/3/4`, `waking-up`, `night0` | Prologue chain + March 2 choice |
+| `continue-to-night2.html`, `between-nights.html` | Bridge flavour between nights |
+| `memory-*.html`, `lore-*.html`, `voicemail-transcript.html` | Side pages (`history.back`) |
 | `js/night1.js` / `night1Data.js` | Explore, dial decoy, chat, decode |
 | `js/night2.js` / `night2Data.js` | Apps, memory, hidden thread |
 | `js/night3.js` | Heartbeat, timed chat, word bank, routing |
 | `js/state.js` / `stateNight3Extend.js` | Trust, clues, reset |
 | `ending-shell.html` | Three endings via `?outcome=` |
+| `credits.html`, `after.html` | Post-game credits and epilogue |
 
 ---
 
 ## QA & submission docs
 
-- [QA.txt](QA.txt) — manual test matrix
-- [HUONG_DAN_DAT_90_PLUS.md](HUONG_DAN_DAT_90_PLUS.md) — 90+ checklist
-- [PRESENTATION_3MIN.md](PRESENTATION_3MIN.md) — 3-minute presentation script
-- [reference.html](reference.html) / [ATTRIBUTION.txt](ATTRIBUTION.txt) — credits
+| Doc | Purpose |
+|---|---|
+| [QA.txt](QA.txt) | Manual test matrix (full flow) |
+| [MAJOR_PROJECT_PROGRESS_VI.md](MAJOR_PROJECT_PROGRESS_VI.md) | Full design doc (VI) |
+| [MAJOR_PROJECT_PROGRESS_EN.md](MAJOR_PROJECT_PROGRESS_EN.md) | Full design doc (EN summary) |
+| [HUONG_DAN_DAT_90_PLUS.md](HUONG_DAN_DAT_90_PLUS.md) | 90+ submission checklist |
+| [PRESENTATION_3MIN.md](PRESENTATION_3MIN.md) | 3-minute presentation script |
+| [credits.html](credits.html) | Submission credits page |
+| [reference.html](reference.html) / [ATTRIBUTION.txt](ATTRIBUTION.txt) | Third-party assets |
 
 ---
 
 ## Screenshots
 
-Add captures under [docs/screenshots/](docs/screenshots/) (see README there). Suggested: prologue, explore, chat, Night 2 apps, FOUND ending.
+Add captures under [docs/screenshots/](docs/screenshots/) (see README there). Suggested: prologue title, night0 choice, explore, chat, Night 2 side link, FOUND + Credits.
 
 ---
 

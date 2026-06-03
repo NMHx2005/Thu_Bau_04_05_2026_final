@@ -1,0 +1,148 @@
+/* SIGNAL LOST — memory / lore side pages (history.back) */
+
+html,
+body.side-page {
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.side-page {
+  min-height: 100vh;
+  margin: 0;
+  background: #0a0a12;
+  color: #c8c8d8;
+  font-family: "Courier New", Courier, monospace;
+  line-height: 1.65;
+  padding: 32px 20px 48px;
+  box-sizing: border-box;
+}
+
+.side-page__inner {
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.side-page__img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 24px;
+  border-radius: 8px;
+}
+
+.side-page__title {
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #e8e8f0;
+  margin: 0 0 16px;
+}
+
+.side-page__label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #9898b0;
+  margin: 0 0 20px;
+}
+
+.side-page__body {
+  font-size: 0.95rem;
+  color: #b0b0c8;
+}
+
+.side-page__body p {
+  margin: 0 0 1rem;
+}
+
+.side-page__close {
+  display: inline-block;
+  margin-top: 28px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(108, 99, 255, 0.45);
+  background: rgba(108, 99, 255, 0.12);
+  color: #e8e8f0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.side-page__close:hover {
+  background: rgba(108, 99, 255, 0.28);
+}
+
+/* memory-draft editor */
+.side-page--editor .side-page__editor {
+  background: #12121c;
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  border-radius: 6px;
+  padding: 20px 18px;
+  font-size: 0.88rem;
+}
+
+.side-page--editor .strike {
+  text-decoration: line-through;
+  color: rgba(152, 152, 176, 0.35);
+}
+
+.side-page--editor .draft-line {
+  margin: 0.65rem 0;
+  color: #9898b0;
+}
+
+.side-page--editor .draft-active {
+  color: #e8e8f0;
+}
+
+.side-page--editor .draft-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: #6c63ff;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: draft-blink 1s step-end infinite;
+}
+
+@keyframes draft-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* voicemail transcript */
+.side-page--phone .side-page__timestamp {
+  font-size: 0.75rem;
+  color: #6c63ff;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+
+.side-page--phone .pause {
+  display: block;
+  color: rgba(152, 152, 176, 0.45);
+  font-size: 0.75rem;
+  margin: 0.8rem 0;
+  font-style: italic;
+}
+
+@media (max-width: 480px) {
+  .side-page {
+    padding: 24px 16px 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draft-cursor {
+    animation: none;
+    opacity: 1;
+  }
+}

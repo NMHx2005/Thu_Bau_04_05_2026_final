@@ -152,7 +152,28 @@
           document.title = "SIGNAL FOUND";
           document.getElementById("line1").textContent =
             window.SignalLostEnding.readFinalLine() || "\u2014";
-          document.getElementById("finalEcho").textContent = "I love you. Call me back when you can.";
+          document.getElementById("finalEcho").textContent =
+            "I love you. Call me back when you can.";
+          var phrases = window.SignalLostState
+            ? window.SignalLostState.getPhrases()
+            : [];
+          if (phrases.length > 0) {
+            var phraseEl = document.createElement("p");
+            phraseEl.className = "sub";
+            phraseEl.textContent =
+              "you said, once: \u201c" + phrases[0] + "\u201d";
+            phraseEl.style.cssText =
+              "margin-top:1.4rem;font-size:0.78rem;color:rgba(152,152,176,0.6);font-style:italic;";
+            document.getElementById("stage-found").appendChild(phraseEl);
+          }
+          setTimeout(function () {
+            var creditsLink = document.createElement("a");
+            creditsLink.href = "credits.html";
+            creditsLink.textContent = "Credits";
+            creditsLink.style.cssText =
+              "display:block;margin-top:2rem;font-size:0.7rem;letter-spacing:0.25em;color:rgba(108,99,255,0.5);text-decoration:none;text-transform:uppercase;";
+            document.getElementById("stage-found").appendChild(creditsLink);
+          }, 9000);
           if (window.SignalLostAudio) {
             window.SignalLostAudio.resume();
             setTimeout(function () {

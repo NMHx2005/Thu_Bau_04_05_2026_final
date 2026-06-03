@@ -6,12 +6,15 @@ Reset verification:
 - After prologue, localStorage must not contain signalLost_finalWords or signalLost_notYetRound.
 - sessionStorage signalLost_dialDecoyPassed cleared on new prologue.
 
-Prologue (no game frame — fullscreen):
+Prologue chain (no game frame — fullscreen):
 - index.html does NOT load gameFrame.js (avoids black-screen / clipped overlay).
 - Overlay "Tap to start" covers full screen (z-index 9999).
-- Slide 0 text visible immediately (no 3s fade from black).
+- Slide 1 text visible immediately on index.html.
 - After tap: rain loop starts (assets/audio/rain.mp3); sessionStorage signalLost_audioUnlocked=1.
-- Hint "click anywhere" appears after unlock; 4 clicks reach night1.html.
+- index.html: one click after unlock → prologue-2.html (resetGame on index only).
+- prologue-2.html → prologue-3.html → prologue-4.html (title card) → waking-up.html (3 slides) → night0.html (4 slides + choice).
+- prologue-2+ resume rain if signalLost_audioUnlocked=1.
+- night0.html: "You sent it." / "You deleted it again." → addPhrase → night1.html.
 
 Rain continuity:
 - Prologue tap → hear rain before first slide text advance.
@@ -19,9 +22,9 @@ Rain continuity:
 - Rain fades when leaving for Night 2.
 - resetGame does NOT clear signalLost_audioUnlocked (same browser session).
 
-Prologue (legacy checks):
-- Tap "Tap to start" enables audio (mobile gesture).
-- Slides advance only after unlock.
+Bridge pages:
+- continue-to-night2.html: trust 0-3 / 4-6 / 7+ flavour; click → night2.html.
+- between-nights.html: clues>=3 and trust>=7 vs else; click → continue-to-night3.html.
 
 Night order guards (no skip):
 - night2.html: requires doneSignal1 (Night 1 signal puzzle completed). Else → night1.html.
@@ -34,8 +37,10 @@ Night 1 — exploration beats:
 Night 1 — dial / lightbox:
 - dialBuf caps at 10 digits.
 - ESC closes object lightbox; close button receives focus when opened.
+- window/coat lightbox: "Read more →" → lore-window.html / lore-coat.html; Back → history.back().
 - Correct digits only: 0427318247 (spaces ignored).
 - Decoy first hint wrong digit; shake; then correct hint.
+- Night 1 complete → continue-to-night2.html (not night2.html direct).
 
 Night 1 — rain / decode:
 - Rain audible on prologue after tap and on Night 1 explore (volume ~0.12).
@@ -59,11 +64,25 @@ Night 2 — hidden thread in-app:
 Voicemail:
 - trust < 5 → locked copy.
 - trust >= 5 → "Play message" plays assets/audio/voicemail.mp3 (or tone fallback).
+- trust >= 5 → "Read transcript →" opens voicemail-transcript.html; Close → history.back().
+
+Night 2 side pages (history.back):
+- Notes → memory-draft.html.
+- Browser → memory-east-entrance.html, memory-three-weeks.html.
+- Night 2 exit (hidden thread open) → between-nights.html (not night3.html direct).
+
+Night 3 word bank:
+- Done: wordBuilt echoes quoted line (italic, 1.8s) before finOverlay.
 
 Routing (Night 3 after word puzzle Continue):
 - T>=7 and C>=3 → ending-shell.html?outcome=found
 - T>=4 or C>=2 → ending-shell.html?outcome=static
 - else → ending-shell.html?outcome=notyet
+
+Ending FOUND (shell):
+- line1 = word bank (getFinalWords).
+- If getPhrases().length > 0: "you said, once: …" under finalEcho (night0 phrase or Night 2 free-text).
+- Credits link appears ~9s → credits.html; Epilogue → after.html shows getFinalWords.
 
 Boundary spot checks:
 1) T=3, C=3 → static (C>=2)
@@ -95,5 +114,9 @@ Mobile:
 jQuery UI (Night 2):
 - css/jquery-overrides.css loads after jquery-ui.css; sortable placeholder matches palette.
 
+Document pages (scroll):
+- credits.html, reference.html, after.html: body.doc-page scrolls inside game frame.
+- memory-*.html, lore-*.html: body scrolls when content is tall.
+
 Reference:
-- reference.html and ATTRIBUTION.txt list all third-party assets.
+- reference.html, credits.html, and ATTRIBUTION.txt list third-party assets.

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SIGNAL LOST. Night One ends</title>
+    <link rel="stylesheet" href="css/prologue.css" />
+  </head>
+  <body class="prologue-root" id="prologueRoot">
+    <section class="prologue-slide is-active" aria-label="Night 1 summary">
+      <p class="prologue-text prologue-text--fade" id="bridgeText"></p>
+    </section>
+    <p class="prologue-hint">click anywhere to continue</p>
+    <script src="js/gameFrame.js"></script>
+    <script src="js/state.js"></script>
+    <script>
+      (function () {
+        var S = window.SignalLostState;
+        var trust = S ? S.getTrust() : 0;
+        var text = "You gave nothing. The line is still cold.";
+        if (trust >= 7) {
+          text = "The line is warm. Unknown is listening.";
+        } else if (trust >= 4) {
+          text = "Something passed between you. Not enough to name yet.";
+        }
+        document.getElementById("bridgeText").textContent = text;
+
+        document.getElementById("prologueRoot").addEventListener("click", function () {
+          window.location.href = "night2.html";
+        });
+      })();
+    </script>
+  </body>
+</html>

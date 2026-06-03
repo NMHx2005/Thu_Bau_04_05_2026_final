@@ -43,6 +43,41 @@
   opacity: 1;
 }
 
+.prologue-slide--title .prologue-text {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.prologue-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+  align-items: center;
+}
+
+.prologue-choice {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(108, 99, 255, 0.55);
+  background: rgba(108, 99, 255, 0.15);
+  color: #e8e8f0;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.prologue-choice:hover {
+  background: rgba(108, 99, 255, 0.3);
+}
+
+.night-hidden {
+  display: none !important;
+}
+
 @keyframes prologue-fade {
   from {
     opacity: 0;

@@ -1,6 +1,8 @@
 # SIGNAL LOST. Complete Project Documentation
 
-This document covers the **full project scope**: Prologue, Night 1, Night 2, Night 3, and the three-branch ending system. It replaces the earlier Week 9 checkpoint document (50%).
+This document covers the **full project scope**: prologue chain (9 HTML steps), Nights 1–3, bridge pages, side pages, three endings, and post-game credits/epilogue. **25 HTML files** in `signal-9/` (+ root redirect).
+
+**Core gameplay logic (trust, clues, puzzles, endings):** unchanged from the original 3-night build. The expansion adds **narrative navigation**, optional read-more pages, and FOUND-ending polish.
 
 ---
 
@@ -8,13 +10,17 @@ This document covers the **full project scope**: Prologue, Night 1, Night 2, Nig
 
 | Phase | Status |
 |---|---|
-| Prologue (4 slides, state reset) | Complete |
-| Night 1. Exploration + dial + chat + signal decode | Complete |
-| Night 2. Apps + memory drag + chat + free-text + hidden thread | Complete |
-| Night 3. Heartbeat puzzle + timed chat + reveal + word bank | Complete |
-| Ending routing (SIGNAL FOUND / NOT YET / STATIC) | Complete |
-| Game frame (1200px 16:9 viewport, centered) | Complete |
-| Dial decoy mechanic (wrong hint first, vibrate, then correct) | Complete |
+| Prologue chain (`index` → `prologue-2/3/4` → `waking-up` → `night0`) | Complete |
+| Night 0 flashback + choice (`addPhrase` only) | Complete |
+| Night 1 + lore deep-links | Complete |
+| Bridge `continue-to-night2` | Complete |
+| Night 2 + side pages + hidden thread | Complete |
+| Bridge `between-nights` → `continue-to-night3` | Complete |
+| Night 3 + word-bank echo | Complete |
+| `ending-shell` + phrase line + Credits link | Complete |
+| `credits.html`, `after.html` | Complete |
+| Game frame + `doc-page` scroll | Complete |
+| Dial decoy mechanic | Complete |
 
 ---
 
@@ -34,25 +40,17 @@ Built with vanilla HTML, CSS, and JavaScript. No framework, no build tool.
 ## 2. Full Game Flow
 
 ```
-index.html (Prologue, reset state)
-  |
-night1.html
-  Explore room → dial pad (decoy number → vibrate → correct number) → chat → signal decode
-  |
-night2.html
-  Apps (Photos / Notes / Browser / Voicemail) → memory drag → chat → free-text → hidden thread
-  |
-  End of Night 2 (apps screen):
-  If hidden thread found → "Continue to Night 3" → night3.html
-  Else → "Continue" (prompt to expand Drafts / Draft sync), retry after opening thread
-  |
-continue-to-night3.html (optional gate / test bookmark; checks canEnterNight3)
-  |
-night3.html
-  Heartbeat puzzle → timed chat → reveal chat → word bank → routing button
-  |
-ending-shell.html?outcome=found|static|notyet
+index.html (slide 1 + audio unlock + reset)
+  → prologue-2 → prologue-3 → prologue-4 (title) → waking-up → night0 (choice → addPhrase)
+  → night1.html (explore → dial decoy → chat → decode)
+  → continue-to-night2.html (trust flavour)
+  → night2.html (apps + side links → memory → chat → free-text → hidden thread)
+  → between-nights.html → continue-to-night3.html → night3.html
+  → ending-shell.html?outcome=...
+  (found: optional phrase line + Credits → credits.html → after.html)
 ```
+
+See [MAJOR_PROJECT_PROGRESS_VI.md](MAJOR_PROJECT_PROGRESS_VI.md) sections **2.1–2.3** for prologue, bridge, and side-page detail (Vietnamese).
 
 ---
 
@@ -554,15 +552,19 @@ Same module `signalPuzzle.js`, two modes:
 
 | File | Purpose |
 |---|---|
-| `index.html` | 4-slide prologue, state reset |
-| `night1.html` | Night 1 UI: exploration scene, dial pad, phone screen, signal panel |
-| `night2.html` | Night 2 UI: app grid, memory drag, chat |
-| `night3.html` | Night 3 UI: heartbeat, timed chat, reveal, word bank |
-| `continue-to-night3.html` | Gate: checks Night 3 unlock condition |
-| `ending-shell.html` | Single ending router (accepts `?outcome=`) |
-| `ending-found.html` | Standalone FOUND ending (legacy) |
-| `ending-notyet.html` | Standalone NOT YET ending (legacy) |
-| `ending-static.html` | Standalone STATIC ending (legacy) |
+| `index.html` | Prologue slide 1 + reset |
+| `prologue-2/3/4.html`, `waking-up.html`, `night0.html` | Prologue chain |
+| `night1.html` | Night 1 UI |
+| `continue-to-night2.html` | Trust bridge |
+| `night2.html` | Night 2 UI |
+| `memory-*.html`, `voicemail-transcript.html` | Side pages |
+| `between-nights.html`, `continue-to-night3.html` | Bridges / gate |
+| `night3.html` | Night 3 UI |
+| `lore-window.html`, `lore-coat.html` | Lore deep-read |
+| `ending-shell.html` | Main ending router |
+| `ending-found/static/notyet.html` | Legacy |
+| `credits.html`, `after.html` | Post-game |
+| `reference.html` | Attribution reference |
 | `js/night1.js` | Hotspots, lore, wakeup, lightbox, dial decoy, Night 1 chat, signal decode, transition |
 | `js/night2.js` | Apps, memory drag, Night 2 chat, free-text, hidden thread |
 | `js/night3.js` | Heartbeat, soften loop, timed chat, reveal, word bank, routing |
@@ -580,9 +582,10 @@ Same module `signalPuzzle.js`, two modes:
 | `css/animations.css` | msg-enter, dial-shake |
 | `css/night2-ui.css` | Night 2 back/continue buttons |
 | `css/night3.css` | Night 3 layout (`#phase-night3`, `#phoneScreen3`, fin overlay in frame) |
-| `css/prologue.css` | Prologue slides |
-| `css/jquery-overrides.css` | jQuery UI sortable (memory drag) |
-| `css/game-frame.css` | 1200px viewport, phase stack, Night 3 phone fit |
+| `css/prologue.css` | Prologue + title card |
+| `css/side-page.css` | Side / lore pages |
+| `css/jquery-overrides.css` | jQuery UI sortable |
+| `css/game-frame.css` | 1200px frame, `.doc-page` scroll |
 
 ---
 
@@ -635,10 +638,11 @@ A: Canvas allows precise real-time pixel blending. The noise layer can be drawn 
 - Canvas decode (Night 1) and canvas heartbeat (Night 3) in the same module
 - CSS specificity bug diagnosed and fixed in production code
 - Night 1 hotspots: violet dots on sharp room background, not `obj_*.png` sprites on the scene
-- Night 2 → Night 3: in-game button when hidden thread is open; `continue-to-night3.html` is an optional gate
+- Night 2 → Night 3: `between-nights.html` → `continue-to-night3.html`
+- 25 HTML pages; FOUND phrase line + Credits link; word bank 1.8s echo
 - Night 3 UI: `#phase-night3` + `night3.css` inside the game frame
 - Player-facing copy: no em dashes in main game HTML/JS; `ending-shell.html` NOT YET round 2 still uses typographic quotes (`\u201c`) in one line
 
 ---
 
-*Document reflects the state of signal-9/ as of 20 May 2026.*
+*Document reflects the state of signal-9/ as of 3 June 2026 (25-page expansion).*

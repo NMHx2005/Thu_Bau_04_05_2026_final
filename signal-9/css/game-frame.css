@@ -316,6 +316,20 @@ html.game-framed .game-viewport__inner #eyeLidBottom {
   height: 51%;
 }
 
+/* Document pages (credits, reference, after) — scroll inside frame */
+html.game-framed .game-viewport__inner.doc-page {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+html.game-framed .game-viewport__inner.doc-page .ref-page,
+html.game-framed .game-viewport__inner.doc-page #stage {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* Prologue */
 html.game-framed .game-viewport__inner.prologue-root {
   background: #000;
